@@ -1,11 +1,9 @@
-# My Personal Project
+# Flash Memory
 
-## A subtitle
+### A flash card studying system that implements the Retrospective Revision Spaced Repetition Method with Active Recall
 
-A *bulleted* list:
-- item 1
-- item 2
-- item 3
+My personal project will be a flash card application that helps you study called *Flash Memory*. It will have basic functionality that allows you to have a question and answer on a flash card. It can also keep track of other details like when you last review a certain cue card and how you confident you felt after testing yourself. An assortment of cards can be collected into a card deck for a specific topic. You can also have multiple classes that can have multiple card decks.
 
-An example of text with **bold** and *italic* fonts.  Note that the IntelliJ markdown previewer doesn't seem to render 
-the bold and italic fonts correctly but they will appear correctly on GitHub.
+Once cards are made, you can also use *Flash Memory* to test yourself and rate how you did for each topic. It will keep track of your confidence with the topic and also when you last studied it. This way, when you have extra time to study, you can see what your weakest topic is or which topic you haven't studied in while. I was interested in this project as I feel having more efficient studying techniques is always beneficial.
+
+The idea is further explained in by Ali Abdall in his [YouTube Video](https://www.youtube.com/watch?v=b7o09a7t4RA) which inspired the idea for the project.
