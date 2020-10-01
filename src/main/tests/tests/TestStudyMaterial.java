@@ -16,7 +16,7 @@ class TestStudyMaterial {
     StudyMaterial m3;
 
     @BeforeEach
-    void runBefore(){
+    void setUp() {
         m0 = new StudyMaterial();
         m1 = new StudyMaterial(Confidence.LOW);
         m2 = new StudyMaterial(Confidence.MEDIUM);
