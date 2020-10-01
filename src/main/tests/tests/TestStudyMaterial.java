@@ -48,5 +48,12 @@ class TestStudyMaterial {
         assertEquals(LocalDate.now().minusDays(4), m0.getLastStudyDate());
         assertEquals(4, m0.getDaysSinceStudied());
         assertEquals(Confidence.MEDIUM, m0.getConfidence());
+
+        m0.study(Confidence.HIGH);
+
+        assertEquals(3, m0.getTimesStudied());
+        assertEquals(LocalDate.now(), m0.getLastStudyDate());
+        assertEquals(0, m0.getDaysSinceStudied());
+        assertEquals(Confidence.HIGH, m0.getConfidence());
     }
 }
