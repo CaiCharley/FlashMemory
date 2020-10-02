@@ -25,7 +25,7 @@ public class Topic extends StudyMaterial {
         return cards.put(question, new Card(question, answer));
     }
 
-    //requires: card must be in cards
+    //requires: cardKey must be in cards
     //modifies: this
     //effects: edits card's question in cards and updates key of card
     public Card editCardQuestion(String cardKey, String newQuestion) {
@@ -34,8 +34,8 @@ public class Topic extends StudyMaterial {
         return cards.put(newQuestion, editCard);
     }
 
-    //requires: card must be in cards
-    //modifies:this
+    //requires: cardKey must be in cards
+    //modifies: this
     //effects: edits card's answer in cards
     public Card editCardAnswer(String cardKey, String newAnswer) {
         Card editCard = cards.remove(cardKey);

@@ -26,14 +26,14 @@ public class StudyMaterial implements Comparable<StudyMaterial> {
 
     //modifies: this
     //effects: adds today as last date studied to end of studyDates and updates confidence
-    public void study(Confidence confidence) {
+    public void trackStudy(Confidence confidence) {
         this.studyDates.add(LocalDate.now());
         this.confidence = confidence;
     }
 
     //modifies: this
     //effects: studies this material and adds date studied to end of studyDates and updates confidence
-    public void study(LocalDate date, Confidence confidence) {
+    public void trackStudy(LocalDate date, Confidence confidence) {
         this.studyDates.add(date);
         this.confidence = confidence;
     }
