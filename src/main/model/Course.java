@@ -1,20 +1,15 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-// a course containing many topics
-public class Course extends StudyMaterial {
+// a course containing many topics in a map that you can study
+public class Course extends StudyMaterial implements StudyableMap<Topic> {
     private String name;
     private Map<String, Topic> topics;
 
     public Course(String name) {
         this.name = name;
         this.topics = new HashMap<>();
-    }
-
-    public Topic addTopic(Topic topic) {
-        return topics.put(topic.getName(), topic);
     }
 
     //requires: topicKey must be in topics
@@ -26,29 +21,99 @@ public class Course extends StudyMaterial {
         return topics.put(newName, editTopic);
     }
 
+    //getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
     //modifies: this
-    //effects: removes topic from topics. returns null if not in topics
-    public Topic removeTopic(String topicKey) {
-        return topics.remove(topicKey);
+    //effects: adds topic to topics
+    public Topic add(Topic topic) {
+        return topics.put(topic.getName(), topic);
     }
 
-    //effects: returns numbers of topics in this
-    public int topicCount() {
-        return topics.size();
+    @Override
+    //modifies: this
+    //effects: removes topic with question from topics. returns null if TopicName not in topics
+    public Topic remove(String topicName) {
+        return topics.remove(topicName);
     }
 
-    //effects: gets topic with topicKey
-    public Topic getTopic(String topicKey) {
-        return topics.get(topicKey);
+    @Override
+    //effects: returns topic with topicName
+    public Topic get(String topicName) {
+        return topics.get(topicName);
     }
 
-    //effects: gets all topics in this
-    public Map<String, Topic> getAllTopics() {
+    @Override
+    //effects: returns true if topic with topicName is in topics
+    public boolean contains(String topicName) {
+        return topics.containsKey(topicName);
+    }
+
+    @Override
+    //effects: returns true if topic is in topics
+    public boolean contains(Topic topic) {
+        return topics.containsValue(topic);
+    }
+
+    @Override
+    //effects: returns topics
+    public Map<String, Topic> getAll() {
         return topics;
     }
 
+    @Override
+    //effects: returns map of topics at confidence level
+    public Map<String, Topic> getAtConfidence(Confidence confidence) {
+        Map<String, Topic> selectedTopics = new HashMap<>();
+        for (String key : topics.keySet()) {
+            if (topics.get(key).getConfidence().compareTo(confidence) == 0) {
+                selectedTopics.put(key, topics.get(key));
+            }
+        }
+        return selectedTopics;
+    }
 
-    public String getName() {
-        return name;
+    @Override
+    //effects: returns map of topics at or below confidence level
+    public Map<String, Topic> getBelowConfidence(Confidence confidence) {
+        Map<String, Topic> selectedTopics = new HashMap<>();
+        for (String key : topics.keySet()) {
+            if (topics.get(key).getConfidence().compareTo(confidence) <= 0) {
+                selectedTopics.put(key, topics.get(key));
+            }
+        }
+        return selectedTopics;
+    }
+
+    @Override
+    //effects: returns sorted list of topic of priority by compareTo
+    public List<Topic> getSortedByPriority() {
+        List<Topic> sortedTopics = new ArrayList<>(topics.values());
+        Collections.sort(sortedTopics);
+        return sortedTopics;
+    }
+
+    @Override
+    //effects: returns number of topics in this
+    public int size() {
+        return topics.size();
+    }
+
+    @Override
+    //effects: returns total number of cards in all topics
+
+    public int countCards() {
+        int cards = 0;
+        for (Topic t : topics.values()) {
+            cards += t.countCards();
+        }
+        return cards;
     }
 }
