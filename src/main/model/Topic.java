@@ -3,7 +3,7 @@ package model;
 import java.util.*;
 
 // a topic containing many cards in a map with unique question as key
-public class Topic extends StudyMaterial {
+public class Topic extends StudyMaterial implements StudyableMap<Card> {
     private String name;
     private Map<String, Card> cards;
 
@@ -13,59 +13,53 @@ public class Topic extends StudyMaterial {
         this.cards = new HashMap<>();
     }
 
+    @Override
     //modifies: this
     //effects: adds card to cards
-    public Card addCard(Card card) {
+    public Card add(Card card) {
         return cards.put(card.getQuestion(), card);
     }
 
     //modifies: this
     //effects: adds card with q and a to cards
-    public Card addCard(String question, String answer) {
+    public Card add(String question, String answer) {
         return cards.put(question, new Card(question, answer));
     }
 
-    //requires: cardKey must be in cards
-    //modifies: this
-    //effects: edits card's question in cards and updates key of card
-    public Card editCardQuestion(String cardKey, String newQuestion) {
-        Card editCard = cards.remove(cardKey);
-        editCard.setQuestion(newQuestion);
-        return cards.put(newQuestion, editCard);
-    }
-
-    //requires: cardKey must be in cards
-    //modifies: this
-    //effects: edits card's answer in cards
-    public Card editCardAnswer(String cardKey, String newAnswer) {
-        Card editCard = cards.remove(cardKey);
-        editCard.setAnswer(newAnswer);
-        return cards.put(editCard.getQuestion(), editCard);
-    }
-
+    @Override
     //modifies: this
     //effects: removes card with question from cards. returns null if card not in cards
-    public Card removeCard(String question) {
+    public Card remove(String question) {
         return cards.remove(question);
     }
 
-    //effects: returns number of cards in cards
-    public int cardCount() {
-        return cards.size();
-    }
-
+    @Override
     //effects: gets card in cards with key
-    public Card getCard(String cardKey) {
+    public Card get(String cardKey) {
         return cards.get(cardKey);
     }
 
+    @Override
+    //effects: return true if cardQuestion is in cards
+    public boolean contains(String cardQuestion) {
+        return cards.containsKey((cardQuestion));
+    }
+
+    @Override
+    //effects: return true if card is in cards
+    public boolean contains(Card card) {
+        return cards.containsValue((card));
+    }
+
+    @Override
     //effects: returns all cards in this
-    public Map<String, Card> getAllCards() {
+    public Map<String, Card> getAll() {
         return cards;
     }
 
+    @Override
     //effects: returns all cards in this with certain confidence
-    public Map<String, Card> getCardsAt(Confidence confidence) {
+    public Map<String, Card> getAtConfidence(Confidence confidence) {
         Map<String, Card> selectedCards = new HashMap<>();
         for (String key : cards.keySet()) {
             if (cards.get(key).getConfidence().compareTo(confidence) == 0) {
@@ -75,8 +69,9 @@ public class Topic extends StudyMaterial {
         return selectedCards;
     }
 
+    @Override
     //effect: returns cards <= con
-    public Map<String, Card> getCardsBelow(Confidence confidence) {
+    public Map<String, Card> getBelowConfidence(Confidence confidence) {
         Map<String, Card> selectedCards = new HashMap<>();
         for (String key : cards.keySet()) {
             if (cards.get(key).getConfidence().compareTo(confidence) <= 0) {
@@ -86,11 +81,36 @@ public class Topic extends StudyMaterial {
         return selectedCards;
     }
 
+    @Override
     //effect: returns an Arraylist of cards sorted by compareTo
-    public List<Card> getPrioritySortedCards() {
+    public List<Card> getSortedByPriority() {
         List<Card> sortedCards = new ArrayList<>(cards.values());
         Collections.sort(sortedCards);
         return sortedCards;
+    }
+
+    @Override
+    //effects: returns number of cards in cards
+    public int size() {
+        return cards.size();
+    }
+
+    //requires: cardQuestion must be in cards
+    //modifies: this
+    //effects: edits card's question in cards and updates key of card
+    public Card editCardQuestion(String cardQuestion, String newQuestion) {
+        Card editCard = cards.remove(cardQuestion);
+        editCard.setQuestion(newQuestion);
+        return cards.put(newQuestion, editCard);
+    }
+
+    //requires: cardKey must be in cards
+    //modifies: this
+    //effects: edits card's answer in cards
+    public Card editCardAnswer(String cardQuestion, String newAnswer) {
+        Card editCard = cards.remove(cardQuestion);
+        editCard.setAnswer(newAnswer);
+        return cards.put(editCard.getQuestion(), editCard);
     }
 
     public String getName() {
