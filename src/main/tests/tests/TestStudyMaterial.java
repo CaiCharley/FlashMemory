@@ -32,7 +32,7 @@ class TestStudyMaterial {
         assertEquals(0, m2.compareTo(m2));
         assertEquals(-2, m1.compareTo(m3));
 
-        m3.study(LocalDate.now().minusDays(4), Confidence.MEDIUM);
+        m3.trackStudy(LocalDate.now().minusDays(4), Confidence.MEDIUM);
 
         assertEquals(1, m2.compareTo(m3));
         assertEquals(2, m2.compareTo(m0));
@@ -40,21 +40,21 @@ class TestStudyMaterial {
 
     @Test
     void testStudy() {
-        m0.study(LocalDate.now().minusWeeks(1), Confidence.LOW);
+        m0.trackStudy(LocalDate.now().minusWeeks(1), Confidence.LOW);
 
         assertEquals(1, m0.getTimesStudied());
         assertEquals(LocalDate.now().minusWeeks(1), m0.getLastStudyDate());
         assertEquals(7, m0.getDaysSinceStudied());
         assertEquals(Confidence.LOW, m0.getConfidence());
 
-        m0.study(LocalDate.now().minusDays(4), Confidence.MEDIUM);
+        m0.trackStudy(LocalDate.now().minusDays(4), Confidence.MEDIUM);
 
         assertEquals(2, m0.getTimesStudied());
         assertEquals(LocalDate.now().minusDays(4), m0.getLastStudyDate());
         assertEquals(4, m0.getDaysSinceStudied());
         assertEquals(Confidence.MEDIUM, m0.getConfidence());
 
-        m0.study(Confidence.HIGH);
+        m0.trackStudy(Confidence.HIGH);
 
         assertEquals(3, m0.getTimesStudied());
         assertEquals(LocalDate.now(), m0.getLastStudyDate());

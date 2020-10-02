@@ -25,11 +25,11 @@ public class TestTopic {
         ArrayList<Card> cards = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Card c = new Card("q" + i, "a" + i);
-            c.study(LocalDate.now().minusDays(2), Confidence.LOW);
+            c.trackStudy(LocalDate.now().minusDays(2), Confidence.LOW);
             if (i > 8) {
-                c.study(Confidence.HIGH);
+                c.trackStudy(Confidence.HIGH);
             } else if (i < 5) {
-                c.study(Confidence.MEDIUM);
+                c.trackStudy(Confidence.MEDIUM);
             }
             cards.add(c);
         }
@@ -55,13 +55,13 @@ public class TestTopic {
         }
 
         deck2.add(new Card("q0", "a0"));
-        deck2.get(0).study(LocalDate.now().minusDays(2), Confidence.LOW);
+        deck2.get(0).trackStudy(LocalDate.now().minusDays(2), Confidence.LOW);
         deck2.add(new Card("q1", "a1"));
-        deck2.get(1).study(LocalDate.now().minusDays(1), Confidence.LOW);
+        deck2.get(1).trackStudy(LocalDate.now().minusDays(1), Confidence.LOW);
         deck2.add(new Card("q2", "a2"));
-        deck2.get(2).study(LocalDate.now().minusDays(3), Confidence.MEDIUM);
+        deck2.get(2).trackStudy(LocalDate.now().minusDays(3), Confidence.MEDIUM);
         deck2.add(new Card("q3", "a3"));
-        deck2.get(3).study(LocalDate.now().minusDays(3), Confidence.HIGH);
+        deck2.get(3).trackStudy(LocalDate.now().minusDays(3), Confidence.HIGH);
 
         for (Card c : deck2) {
             t2.addCard(c);
@@ -156,7 +156,7 @@ public class TestTopic {
         assertEquals(cardMap2Subset,t2.getCardsBelow(Confidence.MEDIUM));
 
         Card medCard = new Card("q4", "a4");
-        medCard.study(Confidence.MEDIUM);
+        medCard.trackStudy(Confidence.MEDIUM);
         cardMap2Subset.put(medCard.getQuestion(), medCard);
         t2.addCard(medCard);
 
@@ -168,14 +168,14 @@ public class TestTopic {
         assertEquals(deck2, t2.getPrioritySortedCards());
 
         Card c1 = new Card("q4", "a4");
-        c1.study(LocalDate.now().minusDays(4), Confidence.MEDIUM);
+        c1.trackStudy(LocalDate.now().minusDays(4), Confidence.MEDIUM);
         deck2.add(2, c1);
         t2.addCard(c1);
 
         assertEquals(deck2, t2.getPrioritySortedCards());
 
         Card c2 = new Card("q5", "a5");
-        c2.study(LocalDate.now().minusDays(4), Confidence.HIGH);
+        c2.trackStudy(LocalDate.now().minusDays(4), Confidence.HIGH);
         deck2.add(4, c2);
         t2.addCard(c2);
 
