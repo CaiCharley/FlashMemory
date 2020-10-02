@@ -13,12 +13,14 @@ public class StudyMaterial implements Comparable<StudyMaterial> {
     //effects: creates new material that hasn't been reviewed yet with no confidence
     public StudyMaterial() {
         this.studyDates = new ArrayList<>();
+        this.studyDates.add(LocalDate.now());
         this.confidence = Confidence.NONE;
     }
 
     //effects: creates new material that hasn't been review yet with specified confidence
     public StudyMaterial(Confidence confidence) {
         this.studyDates = new ArrayList<>();
+        this.studyDates.add(LocalDate.now());
         this.confidence = confidence;
     }
 
@@ -37,9 +39,14 @@ public class StudyMaterial implements Comparable<StudyMaterial> {
     }
 
     @Override
-    //effects: returns how much more confident you are at this compared to mat using ordinals of Confidence enumeration
+    //effects: returns how much more confident you are at this compared to mat using Confidence, then time since last
+    //  studied. Positive int means you know this better than mat.
     public int compareTo(StudyMaterial mat) {
-        return this.confidence.ordinal() - mat.confidence.ordinal();
+        if (confidence.compareTo(mat.confidence) != 0) {
+            return confidence.compareTo(mat.confidence);
+        } else {
+            return getLastStudyDate().compareTo(mat.getLastStudyDate());
+        }
     }
 
     //effects: returns the confidence of this
@@ -47,9 +54,9 @@ public class StudyMaterial implements Comparable<StudyMaterial> {
         return confidence;
     }
 
-    //effects: returns number of times this has been studied
+    //effects: returns number of times this has been studied (excluding creation date)
     public int getTimesStudied() {
-        return studyDates.size();
+        return studyDates.size() - 1;
     }
 
     //effects: returns days since the last time studied to the current date
@@ -57,7 +64,6 @@ public class StudyMaterial implements Comparable<StudyMaterial> {
         return ((int) DAYS.between(getLastStudyDate(), LocalDate.now()));
     }
 
-    //requires: this has to be studied at least once
     //effects: returns last date this was studied
     public LocalDate getLastStudyDate() {
         int lastIndex = studyDates.size() - 1;

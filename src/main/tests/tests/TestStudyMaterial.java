@@ -31,6 +31,11 @@ class TestStudyMaterial {
         assertEquals(1, m2.compareTo(m1));
         assertEquals(0, m2.compareTo(m2));
         assertEquals(-2, m1.compareTo(m3));
+
+        m3.study(LocalDate.now().minusDays(4), Confidence.MEDIUM);
+
+        assertEquals(1, m2.compareTo(m3));
+        assertEquals(2, m2.compareTo(m0));
     }
 
     @Test
