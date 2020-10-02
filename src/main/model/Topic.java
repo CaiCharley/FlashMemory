@@ -13,6 +13,33 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
         this.cards = new HashMap<>();
     }
 
+
+    //requires: cardQuestion must be in cards
+    //modifies: this
+    //effects: edits card's question in cards and updates key of card
+    public Card editCardQuestion(String cardQuestion, String newQuestion) {
+        Card editCard = cards.remove(cardQuestion);
+        editCard.setQuestion(newQuestion);
+        return cards.put(newQuestion, editCard);
+    }
+
+    //requires: cardKey must be in cards
+    //modifies: this
+    //effects: edits card's answer in cards
+    public Card editCardAnswer(String cardQuestion, String newAnswer) {
+        Card editCard = cards.remove(cardQuestion);
+        editCard.setAnswer(newAnswer);
+        return cards.put(editCard.getQuestion(), editCard);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     //modifies: this
     //effects: adds card to cards
@@ -93,31 +120,5 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
     //effects: returns number of cards in cards
     public int size() {
         return cards.size();
-    }
-
-    //requires: cardQuestion must be in cards
-    //modifies: this
-    //effects: edits card's question in cards and updates key of card
-    public Card editCardQuestion(String cardQuestion, String newQuestion) {
-        Card editCard = cards.remove(cardQuestion);
-        editCard.setQuestion(newQuestion);
-        return cards.put(newQuestion, editCard);
-    }
-
-    //requires: cardKey must be in cards
-    //modifies: this
-    //effects: edits card's answer in cards
-    public Card editCardAnswer(String cardQuestion, String newAnswer) {
-        Card editCard = cards.remove(cardQuestion);
-        editCard.setAnswer(newAnswer);
-        return cards.put(editCard.getQuestion(), editCard);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
