@@ -2,7 +2,7 @@ package model;
 
 import java.util.*;
 
-// a topic containing many cards in a map with unique question as key
+// a topic containing many cards in a map that you can study
 public class Topic extends StudyMaterial implements StudyableMap<Card> {
     private String name;
     private Map<String, Card> cards;
@@ -12,7 +12,6 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
         this.name = name;
         this.cards = new HashMap<>();
     }
-
 
     //requires: cardQuestion must be in cards
     //modifies: this
@@ -32,6 +31,7 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
         return cards.put(editCard.getQuestion(), editCard);
     }
 
+    //getters and setters
     public String getName() {
         return name;
     }
@@ -97,7 +97,7 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
     }
 
     @Override
-    //effect: returns cards <= con
+    //effect: returns cards at or below confidence
     public Map<String, Card> getBelowConfidence(Confidence confidence) {
         Map<String, Card> selectedCards = new HashMap<>();
         for (String key : cards.keySet()) {
@@ -119,6 +119,12 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
     @Override
     //effects: returns number of cards in cards
     public int size() {
+        return cards.size();
+    }
+
+    @Override
+    //effects: returns number of cards in topics
+    public int countCards() {
         return cards.size();
     }
 }

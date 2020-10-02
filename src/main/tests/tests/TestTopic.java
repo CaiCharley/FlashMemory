@@ -93,6 +93,7 @@ public class TestTopic {
         assertFalse(t1.contains("q15"));
         assertEquals(cardMap1, t1.getAll());
         assertEquals(11, t1.size());
+        assertEquals(11, t1.countCards());
 
         t1.add("q11", "a11");
         cardMap1.put("q11", t1.get("q11"));
@@ -101,6 +102,7 @@ public class TestTopic {
         assertFalse(t1.contains(new Card("new q", "new a")));
         assertEquals(cardMap1, t1.getAll());
         assertEquals(12, t1.size());
+        assertEquals(12, t1.countCards());
     }
 
     @Test
@@ -109,6 +111,7 @@ public class TestTopic {
 
         assertEquals(removedCard, t1.remove("q1"));
         assertEquals(9, t1.size());
+        assertEquals(9, t1.countCards());
         assertFalse(t1.getAll().containsKey("q1"));
         assertFalse(t1.getAll().containsValue(removedCard));
         assertEquals(cardMap1, t1.getAll());
@@ -117,6 +120,7 @@ public class TestTopic {
 
         assertEquals(removedCard, t1.remove("q5"));
         assertEquals(8, t1.size());
+        assertEquals(8, t1.countCards());
         assertFalse(t1.getAll().containsKey("q5"));
         assertFalse(t1.getAll().containsValue(removedCard));
         assertEquals(cardMap1, t1.getAll());

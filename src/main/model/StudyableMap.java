@@ -35,4 +35,7 @@ public interface StudyableMap<E> {
 
     //effects: returns number of elements in this
     int size();
+
+    //effects: returns total number of cards in this
+    int countCards();
 }
