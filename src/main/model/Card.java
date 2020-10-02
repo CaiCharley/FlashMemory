@@ -12,11 +12,11 @@ public class Card extends StudyMaterial {
     }
 
     //getters and setters
-    public void setQuestion(String question) {
+    void setQuestion(String question) {
         this.question = question;
     }
 
-    public void setAnswer(String answer) {
+    void setAnswer(String answer) {
         this.answer = answer;
     }
 

@@ -76,9 +76,6 @@ public class TestTopic {
     void testName() {
         assertEquals("Biology", t1.getName());
         assertEquals("Chemistry", t2.getName());
-
-        t1.setName("Physics");
-        assertEquals("Physics", t1.getName());
     }
 
     @Test

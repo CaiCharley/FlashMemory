@@ -18,12 +18,6 @@ public class TestCard {
         assertEquals("What is the powerhouse of the cell?", c1.getQuestion());
         assertEquals("A = πr^2", c2.getAnswer());
         assertEquals("What is the area of a circle?", c2.getQuestion());
-
-        c1.setQuestion("How does a cell divide?");
-        c1.setAnswer("Mitosis");
-
-        assertEquals("How does a cell divide?", c1.getQuestion());
-        assertEquals("Mitosis", c1. getAnswer());
     }
 
 }
