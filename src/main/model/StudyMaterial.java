@@ -78,7 +78,7 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
         return name;
     }
 
-    protected void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 }

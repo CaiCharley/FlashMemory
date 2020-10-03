@@ -52,6 +52,11 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         return materialMap.get(name);
     }
 
+    //effects: returns materialMap
+    public Map<String, M> getAll() {
+        return materialMap;
+    }
+
     //effects: return true if name is a key of materialMap
     public boolean contains(String name) {
         return materialMap.containsKey((name));
@@ -60,11 +65,6 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
     //effects: return true if material is in materialMap
     public boolean contains(M material) {
         return materialMap.containsValue((material));
-    }
-
-    //effects: returns materialMap
-    public Map<String, M> getAll() {
-        return materialMap;
     }
 
     //effects: returns all materials in materialMap with certain confidence
