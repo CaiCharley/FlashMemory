@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 // Represents some material that you need to study. Records how many times you studied it and when.
-public class StudyMaterial implements Comparable<StudyMaterial> {
+public abstract class StudyMaterial implements Comparable<StudyMaterial> {
     private ArrayList<LocalDate> studyDates;
     private Confidence confidence;
 
