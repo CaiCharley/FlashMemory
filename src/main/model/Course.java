@@ -39,6 +39,15 @@ public class Course extends StudyMaterial implements StudyableMap<Topic> {
 
     @Override
     //modifies: this
+    //effects: adds topics to topics in this
+    public void addAll(Collection<Topic> topics) {
+        for (Topic t : topics) {
+            add(t);
+        }
+    }
+
+    @Override
+    //modifies: this
     //effects: removes topic with topicName from topics. returns null if TopicName not in topics
     public Topic remove(String topicName) {
         return topics.remove(topicName);

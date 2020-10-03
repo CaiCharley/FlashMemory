@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.List;
 
@@ -7,6 +8,10 @@ public interface StudyableMap<E> {
     //modifies: this
     //effects: adds element to this
     E add(E element);
+
+    //modifies: this
+    //effects: adds all E in collection to this
+    void addAll(Collection<E> collection);
 
     //modifies: this
     //effects: removes element with key from this

@@ -55,6 +55,15 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
 
     @Override
     //modifies: this
+    //effects: add cards to cards in this
+    public void addAll(Collection<Card> cards) {
+        for (Card c : cards) {
+            add(c);
+        }
+    }
+
+    @Override
+    //modifies: this
     //effects: removes card with question from cards. returns null if card not in cards
     public Card remove(String question) {
         return cards.remove(question);
