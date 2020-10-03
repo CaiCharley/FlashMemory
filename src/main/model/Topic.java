@@ -88,9 +88,9 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
     //effects: returns all cards in this with certain confidence
     public Map<String, Card> getAtConfidence(Confidence confidence) {
         Map<String, Card> selectedCards = new HashMap<>();
-        for (String key : cards.keySet()) {
-            if (cards.get(key).getConfidence().compareTo(confidence) == 0) {
-                selectedCards.put(key, cards.get(key));
+        for (Card c : cards.values()) {
+            if (c.getConfidence().compareTo(confidence) == 0) {
+                selectedCards.put(c.getQuestion(), c);
             }
         }
         return selectedCards;
@@ -100,9 +100,9 @@ public class Topic extends StudyMaterial implements StudyableMap<Card> {
     //effect: returns cards at or below confidence
     public Map<String, Card> getBelowConfidence(Confidence confidence) {
         Map<String, Card> selectedCards = new HashMap<>();
-        for (String key : cards.keySet()) {
-            if (cards.get(key).getConfidence().compareTo(confidence) <= 0) {
-                selectedCards.put(key, cards.get(key));
+        for (Card c : cards.values()) {
+            if (c.getConfidence().compareTo(confidence) <= 0) {
+                selectedCards.put(c.getQuestion(), c);
             }
         }
         return selectedCards;

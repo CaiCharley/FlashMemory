@@ -39,7 +39,7 @@ public class Course extends StudyMaterial implements StudyableMap<Topic> {
 
     @Override
     //modifies: this
-    //effects: removes topic with question from topics. returns null if TopicName not in topics
+    //effects: removes topic with topicName from topics. returns null if TopicName not in topics
     public Topic remove(String topicName) {
         return topics.remove(topicName);
     }
@@ -72,9 +72,9 @@ public class Course extends StudyMaterial implements StudyableMap<Topic> {
     //effects: returns map of topics at confidence level
     public Map<String, Topic> getAtConfidence(Confidence confidence) {
         Map<String, Topic> selectedTopics = new HashMap<>();
-        for (String key : topics.keySet()) {
-            if (topics.get(key).getConfidence().compareTo(confidence) == 0) {
-                selectedTopics.put(key, topics.get(key));
+        for (Topic t : topics.values()) {
+            if (t.getConfidence().compareTo(confidence) == 0) {
+                selectedTopics.put(t.getName(), t);
             }
         }
         return selectedTopics;
@@ -84,9 +84,9 @@ public class Course extends StudyMaterial implements StudyableMap<Topic> {
     //effects: returns map of topics at or below confidence level
     public Map<String, Topic> getBelowConfidence(Confidence confidence) {
         Map<String, Topic> selectedTopics = new HashMap<>();
-        for (String key : topics.keySet()) {
-            if (topics.get(key).getConfidence().compareTo(confidence) <= 0) {
-                selectedTopics.put(key, topics.get(key));
+        for (Topic t : topics.values()) {
+            if (t.getConfidence().compareTo(confidence) <= 0) {
+                selectedTopics.put(t.getName(), t);
             }
         }
         return selectedTopics;
@@ -108,7 +108,6 @@ public class Course extends StudyMaterial implements StudyableMap<Topic> {
 
     @Override
     //effects: returns total number of cards in all topics
-
     public int countCards() {
         int cards = 0;
         for (Topic t : topics.values()) {
