@@ -1,6 +1,5 @@
 package tests;
 
-import com.sun.javafx.image.impl.IntArgbPre;
 import model.Card;
 import model.Confidence;
 import model.Course;
@@ -71,7 +70,7 @@ class TestCourse {
     void testEditTopicName() {
         assertTrue(c1.contains("t1"));
         assertEquals(6, c1.get("t1").countCards());
-        c1.editTopicName("t1", "t1edited");
+        c1.editName("t1", "t1edited");
         Topic editedTopic = c1.get("t1edited");
         editedTopic.add("newq", "newa");
 
@@ -177,10 +176,7 @@ class TestCourse {
 
     @Test
     void testPrioritySorting() {
-        List<Topic> sorted1 = new ArrayList<>();
-        for (Topic t : topics1.values()) {
-            sorted1.add(t);
-        }
+        List<Topic> sorted1 = new ArrayList<>(topics1.values());
         Collections.sort(sorted1);
 
         assertEquals(sorted1, c1.getSortedByPriority());

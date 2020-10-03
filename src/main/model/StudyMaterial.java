@@ -9,19 +9,22 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public abstract class StudyMaterial implements Comparable<StudyMaterial> {
     private ArrayList<LocalDate> studyDates;
     private Confidence confidence;
+    private String name;
 
-    //effects: creates new material that hasn't been reviewed yet with no confidence
-    public StudyMaterial() {
+    //effects: creates new material with id that hasn't been reviewed yet with no confidence
+    public StudyMaterial(String name) {
         this.studyDates = new ArrayList<>();
         this.studyDates.add(LocalDate.now());
         this.confidence = Confidence.NONE;
+        this.name = name;
     }
 
-    //effects: creates new material that hasn't been review yet with specified confidence
-    public StudyMaterial(Confidence confidence) {
+    //effects: creates new material with id that hasn't been review yet with specified confidence
+    public StudyMaterial(String name, Confidence confidence) {
         this.studyDates = new ArrayList<>();
         this.studyDates.add(LocalDate.now());
         this.confidence = confidence;
+        this.name = name;
     }
 
     //modifies: this
@@ -70,4 +73,12 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
         return studyDates.get(lastIndex);
     }
 
+    //getters and setters
+    public String getName() {
+        return name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
+    }
 }

@@ -2,14 +2,13 @@ package tests;
 
 import model.Card;
 import model.Confidence;
-import model.StudyMaterial;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-abstract class TestStudyMaterial {
+public abstract class TestStudyMaterial {
     Card c0;
     Card c1;
     Card c2;
