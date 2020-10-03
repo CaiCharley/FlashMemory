@@ -8,20 +8,36 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestTopic extends TestStudyCollection {
+public class TestTopic extends TestStudyCollection<Card> {
+    Topic t1;
+    Topic t2;
 
-    public static ArrayList<Card> testCards(int num) {
-        ArrayList<Card> cards = new ArrayList<>();
+    List<Card> cards1;
+    List<Card> cards2;
+
+    //effects: returns list of num cards studied daysAgo, cycling confidence
+    public static List<Card> getTestCards(int num, int daysAgo) {
+        List<Card> cards = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             Card c = new Card("q" + i, "a" + i);
-            c.trackStudy(LocalDate.now().minusDays(2), Confidence.LOW);
-            if (i > 8) {
-                c.trackStudy(Confidence.HIGH);
-            } else if (i < 5) {
-                c.trackStudy(Confidence.MEDIUM);
+            c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.NONE);
+            switch (i % 4) {
+                case 0:
+                    c.trackStudy(Confidence.NONE);
+                    break;
+                case 1:
+                    c.trackStudy(Confidence.LOW);
+                    break;
+                case 2:
+                    c.trackStudy(Confidence.MEDIUM);
+                    break;
+                case 3:
+                    c.trackStudy(Confidence.HIGH);
+                    break;
             }
             cards.add(c);
         }
@@ -30,45 +46,62 @@ public class TestTopic extends TestStudyCollection {
 
     @BeforeEach
     void setUp() {
-        t1 = new Topic("Biology");
-        t2 = new Topic("Chemistry", Confidence.MEDIUM);
+        sc1 = new Topic("Biology");
+        sc2 = new Topic("Chemistry", Confidence.MEDIUM);
 
-        deck1 = testCards(10);
-        t1.addAll(deck1);
+        t1 = ((Topic) sc1);
+        t2 = ((Topic) sc2);
 
-        for (Card c : deck1) {
-            cardMap1.put(c.getName(), c);
-        }
+        cards1 = getTestCards(10, 2);
+        cards2 = getTestCards(4, 1);
 
-        deck2 = testCards(4);
-        deck2.get(0).trackStudy(LocalDate.now().minusDays(2), Confidence.LOW);
-        deck2.get(1).trackStudy(LocalDate.now().minusDays(1), Confidence.LOW);
-        deck2.get(2).trackStudy(LocalDate.now().minusDays(3), Confidence.MEDIUM);
-        deck2.get(3).trackStudy(LocalDate.now().minusDays(3), Confidence.HIGH);
-        t2.addAll(deck2);
-
-        for (Card c : deck2) {
-            cardMap2.put(c.getName(), c);
-        }
+        t1.addAll(cards1);
+        t2.addAll(cards2);
     }
 
     @Test
-    void testEditCard() {
-        t1.editCardAnswer("q9", "a9edited");
-        assertEquals(10, t1.size());
-        assertEquals("a9edited", t1.get("q9").getAnswer());
+    void testConstructor() {
+        assertEquals("Biology", t1.getName());
+        assertEquals("Chemistry", t2.getName());
 
-        t1.editCardAnswer("q5", "a5edited");
-        assertEquals(10, t1.size());
-        assertEquals("a5edited", t1.get("q5").getAnswer());
-
-        t1.editCardQuestion("q1", "q1edited");
-        assertEquals(10, t1.size());
-        assertEquals("q1edited", t1.get("q1edited").getName());
-
-        t1.editCardQuestion("q5", "q5edited");
-        assertEquals(10, t1.size());
-        assertEquals("q5edited", t1.get("q5edited").getName());
+        assertEquals(Confidence.NONE, t1.getConfidence());
+        assertEquals(Confidence.MEDIUM, t2.getConfidence());
     }
 
+    @Test
+    void testEditCardQuestion() {
+        assertEquals(cards1.get(1), t1.editCardQuestion("q1", "q1edited"));
+        assertEquals(cards1.get(5), t1.editCardQuestion("q5", "q5edited"));
+
+        assertEquals("q1edited", t1.get("q1edited").getQuestion());
+        assertEquals("q5edited", t1.get("q5edited").getQuestion());
+        assertEquals("q7", t1.get("q7").getQuestion());
+        assertEquals(10, t1.countCards());
+    }
+
+    @Test
+    void testEditCardAnswer() {
+        assertEquals(cards2.get(0), t2.editCardAnswer("q0", "a0edited"));
+        assertEquals(cards2.get(3), t2.editCardAnswer("q3", "a3edited"));
+
+        assertEquals("a0edited", t2.get("q0").getAnswer());
+        assertEquals("a3edited", t2.get("q3").getAnswer());
+        assertEquals("a2", t2.get("q2").getAnswer());
+        assertEquals(4, t2.countCards());
+    }
+
+    @Test
+    void testAddCard() {
+        t2.add("q add", "a add");
+        assertEquals("q add", t2.get("q add").getQuestion());
+        assertEquals("a add", t2.get("q add").getAnswer());
+        assertEquals(Confidence.NONE, t2.get("q add").getConfidence());
+        assertEquals(5, t2.countCards());
+
+        t2.add("q add2", "a add2");
+        assertEquals("q add2", t2.get("q add2").getQuestion());
+        assertEquals("a add2", t2.get("q add2").getAnswer());
+        assertEquals(Confidence.NONE, t2.get("q add2").getConfidence());
+        assertEquals(6, t2.countCards());
+    }
 }
