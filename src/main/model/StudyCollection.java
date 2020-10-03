@@ -19,8 +19,8 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
 
     //modifies: this
     //effects: adds material to materialMap
-    public M add(M material) {
-        return materialMap.put(material.getName(), material);
+    public void add(M material) {
+        materialMap.put(material.getName(), material);
     }
 
     //modifies: this
@@ -33,11 +33,12 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
 
     //requires: name must be in materialMap's keys
     //modifies: this
-    //effects: edits material's name in materialMap and updates key of material
+    //effects: edits material's name in materialMap and updates key of material. returns edited material
     public M editName(String name, String newName) {
         M editedMaterial = materialMap.remove(name);
         editedMaterial.setName(newName);
-        return materialMap.put(newName, editedMaterial);
+        materialMap.put(newName, editedMaterial);
+        return editedMaterial;
     }
 
     //modifies: this

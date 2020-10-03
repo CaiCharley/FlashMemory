@@ -30,10 +30,9 @@ public class Topic extends StudyCollection<Card> {
     }
 
     //modifies: this
-    //effects: adds card with q and a to cards
-    public Card add(String question, String answer) {
-        Card c = new Card(question, answer);
-        return add(c);
+    //effects: adds card with q and a to cards.
+    public void add(String question, String answer) {
+        add(new Card(question, answer));
     }
 
     @Override
