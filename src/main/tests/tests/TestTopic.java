@@ -61,6 +61,7 @@ public class TestTopic extends TestStudyCollection<Card> {
 
     @Test
     void testConstructor() {
+        super.testConstructor();
         assertEquals("Biology", t1.getName());
         assertEquals("Chemistry", t2.getName());
 
