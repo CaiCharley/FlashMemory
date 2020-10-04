@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,12 +16,9 @@ public class TestTopic extends TestStudyCollection<Card> {
     Topic t1;
     Topic t2;
 
-    List<Card> cards1;
-    List<Card> cards2;
-
-    //effects: returns list of num cards studied daysAgo, cycling confidence
-    public static List<Card> getTestCards(int num, int daysAgo) {
-        List<Card> cards = new ArrayList<>();
+    //effects: returns Map of num cards studied daysAgo, cycling confidence
+    public static Map<String, Card> makeTestCards(int num, int daysAgo) {
+        Map<String, Card> cards = new HashMap<>();
         for (int i = 0; i < num; i++) {
             Card c = new Card("q" + i, "a" + i);
             c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.NONE);
@@ -39,29 +36,36 @@ public class TestTopic extends TestStudyCollection<Card> {
                     c.trackStudy(Confidence.HIGH);
                     break;
             }
-            cards.add(c);
+            cards.put(c.getName(), c);
         }
         return cards;
     }
 
     @BeforeEach
     void setUp() {
+        //set up as generic StudyCollection
         sc1 = new Topic("Biology");
         sc2 = new Topic("Chemistry", Confidence.MEDIUM);
 
+        //set up unique StudyMaterials
+        highPrioritySM = new Card("bad q", "bad q");
+        lowPrioritySM = new Card("good q", "good a");
+        highPrioritySM.trackStudy(LocalDate.now().minusDays(7), Confidence.NONE);
+        lowPrioritySM.trackStudy(Confidence.HIGH);
+
+        map1 = makeTestCards(10, 2);
+        map2 = makeTestCards(4, 1);
+
+        //cast generic to test class specific methods
         t1 = ((Topic) sc1);
         t2 = ((Topic) sc2);
 
-        cards1 = getTestCards(10, 2);
-        cards2 = getTestCards(4, 1);
-
-        t1.addAll(cards1);
-        t2.addAll(cards2);
+        t1.addAll(map1.values());
+        t2.addAll(map2.values());
     }
 
     @Test
     void testConstructor() {
-        super.testConstructor();
         assertEquals("Biology", t1.getName());
         assertEquals("Chemistry", t2.getName());
 
@@ -71,8 +75,8 @@ public class TestTopic extends TestStudyCollection<Card> {
 
     @Test
     void testEditCardQuestion() {
-        assertEquals(cards1.get(1), t1.editCardQuestion("q1", "q1edited"));
-        assertEquals(cards1.get(5), t1.editCardQuestion("q5", "q5edited"));
+        assertEquals(map1.get("q1"), t1.editCardQuestion("q1", "q1edited"));
+        assertEquals(map1.get("q5"), t1.editCardQuestion("q5", "q5edited"));
 
         assertEquals("q1edited", t1.get("q1edited").getQuestion());
         assertEquals("q5edited", t1.get("q5edited").getQuestion());
@@ -82,8 +86,8 @@ public class TestTopic extends TestStudyCollection<Card> {
 
     @Test
     void testEditCardAnswer() {
-        assertEquals(cards2.get(0), t2.editCardAnswer("q0", "a0edited"));
-        assertEquals(cards2.get(3), t2.editCardAnswer("q3", "a3edited"));
+        assertEquals(map2.get("q0"), t2.editCardAnswer("q0", "a0edited"));
+        assertEquals(map2.get("q3"), t2.editCardAnswer("q3", "a3edited"));
 
         assertEquals("a0edited", t2.get("q0").getAnswer());
         assertEquals("a3edited", t2.get("q3").getAnswer());

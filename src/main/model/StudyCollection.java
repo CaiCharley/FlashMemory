@@ -47,6 +47,12 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         return materialMap.remove(name);
     }
 
+    //modifies: this
+    //effects: removes material from materialMap. Returns material removed, null if not in materialMap
+    public M remove(M material) {
+        return remove(material.getName());
+    }
+
     //effects: gets material in materialMap with name as key
     public M get(String name) {
         return materialMap.get(name);

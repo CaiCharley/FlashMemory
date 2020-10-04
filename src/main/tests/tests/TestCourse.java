@@ -1,6 +1,5 @@
 package tests;
 
-import model.Card;
 import model.Confidence;
 import model.Course;
 import model.Topic;
@@ -12,15 +11,15 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestCourse {
+class TestCourse extends TestStudyCollection<Topic> {
     Course c1;
     Course c2;
-    Map<String, Topic> topics1;
-    Map<String, Topic> topics2;
 
-    public Map<String, Topic> makeTestTopics(int t) {
+    //effects: returns Map of a number of Topics with different confidence, each with a number of cards with confidence
+    //  studied daysAgo
+    public static Map<String, Topic> makeTestTopics(int numTopics, int numCards, int daysAgo) {
         Map<String, Topic> topics = new HashMap<>();
-        for (int i = 0; i < t; i++) {
+        for (int i = 0; i < numTopics; i++) {
             String topicName = "t" + i;
             Confidence[] confidenceList = new Confidence[]{
                     Confidence.LOW,
@@ -33,28 +32,32 @@ class TestCourse {
             topic.trackStudy(confidenceList[i % 6]);
             topics.put(topicName, topic);
 
-            for (int j = 0; j < 6; j++) {
-                Card c = new Card("q" + j, "a" + j);
-                c.trackStudy(confidenceList[j]);
-                topics.get(topicName).add(c);
-            }
+            topic.addAll(TestTopic.makeTestCards(numCards, daysAgo).values());
         }
         return topics;
     }
 
     @BeforeEach
     void setUp() {
-        c1 = new Course("MICB 201");
-        c2 = new Course("CPSC 210");
+        //set up as generic StudyCollection
+        sc1 = new Course("MICB 201");
+        sc2 = new Course("CPSC 210", Confidence.HIGH);
 
-        topics1 = makeTestTopics(5);
-        for (Topic t : topics1.values()) {
-            c1.add(t);
-        }
-        topics2 = makeTestTopics(3);
-        for (Topic t : topics2.values()) {
-            c2.add(t);
-        }
+        //set up unique StudyMaterials
+        highPrioritySM = new Topic("Roman History");
+        lowPrioritySM = new Topic("Algebra");
+        highPrioritySM.trackStudy(LocalDate.now().minusDays(7), Confidence.NONE);
+        lowPrioritySM.trackStudy(Confidence.HIGH);
+
+        map1 = makeTestTopics(5, 6, 1);
+        map2 = makeTestTopics(3, 6, 1);
+
+        //cast generic to test class specific methods
+        c1 = ((Course) sc1);
+        c2 = ((Course) sc2);
+
+        c1.addAll(map1.values());
+        c2.addAll(map2.values());
     }
 
     @Test
@@ -62,25 +65,10 @@ class TestCourse {
         assertEquals("MICB 201", c1.getName());
         assertEquals("CPSC 210", c2.getName());
 
-        assertEquals(topics1, c1.getAll());
-        assertEquals(topics2, c2.getAll());
+        assertEquals(Confidence.NONE, c1.getConfidence());
+        assertEquals(Confidence.HIGH, c2.getConfidence());
     }
 
-    @Test
-    void testEditTopicName() {
-        assertTrue(c1.contains("t1"));
-        assertEquals(6, c1.get("t1").countCards());
-        c1.editName("t1", "t1edited");
-        Topic editedTopic = c1.get("t1edited");
-        editedTopic.add("newq", "newa");
-
-        assertFalse(c1.contains("t1"));
-        assertTrue(c1.contains("t1edited"));
-        assertEquals(5, c1.size());
-        assertEquals("t1edited", c1.get("t1edited").getName());
-        assertEquals(7, c1.get("t1edited").countCards());
-        assertTrue(c1.get("t1edited").contains("newq"));
-    }
 
     @Test
     void testCountCards() {
@@ -112,85 +100,5 @@ class TestCourse {
         assertEquals(14, c2.countCards());
     }
 
-    @Test
-    void testGetAtConfidence() {
-        Map<String, Topic> c1Low = new HashMap<>();
-        c1Low.put("t0", topics1.get("t0"));
-        c1Low.put("t2", topics1.get("t2"));
 
-        Map<String, Topic> c1Med = new HashMap<>();
-        c1Med.put("t1", topics1.get("t1"));
-        c1Med.put("t3", topics1.get("t3"));
-
-        Map<String, Topic> c1High = new HashMap<>();
-        c1High.put("t4", topics1.get("t4"));
-
-        assertEquals(c1Low, c1.getAtConfidence(Confidence.LOW));
-        assertEquals(c1Med, c1.getAtConfidence(Confidence.MEDIUM));
-        assertEquals(c1High, c1.getAtConfidence(Confidence.HIGH));
-
-        Topic topic = new Topic("t5");
-        topic.trackStudy(Confidence.HIGH);
-        c1High.put(topic.getName(), topic);
-        c1.add(topic);
-
-        assertEquals(c1High, c1.getAtConfidence(Confidence.HIGH));
-    }
-
-    @Test
-    void testGetBelowConfidence() {
-        Map<String, Topic> belowLow = new HashMap<>();
-        belowLow.put("t0", topics1.get("t0"));
-        belowLow.put("t2", topics1.get("t2"));
-
-        Map<String, Topic> belowMed = new HashMap<>();
-        belowMed.put("t1", topics1.get("t1"));
-        belowMed.put("t3", topics1.get("t3"));
-        belowMed.put("t0", topics1.get("t0"));
-        belowMed.put("t2", topics1.get("t2"));
-
-        Map<String, Topic> belowHigh = new HashMap<>();
-        belowHigh.put("t4", topics1.get("t4"));
-        belowHigh.put("t1", topics1.get("t1"));
-        belowHigh.put("t3", topics1.get("t3"));
-        belowHigh.put("t0", topics1.get("t0"));
-        belowHigh.put("t2", topics1.get("t2"));
-
-        assertEquals(belowLow, c1.getBelowConfidence(Confidence.LOW));
-        assertEquals(belowMed, c1.getBelowConfidence(Confidence.MEDIUM));
-        assertEquals(belowHigh, c1.getBelowConfidence(Confidence.HIGH));
-
-        Topic topic = new Topic("t5");
-        Map<String, Topic> belowNone = new HashMap<>();
-        belowNone.put(topic.getName(), topic);
-        belowLow.put(topic.getName(), topic);
-        belowMed.put(topic.getName(), topic);
-        belowHigh.put(topic.getName(), topic);
-        c1.add(topic);
-
-        assertEquals(belowNone, c1.getBelowConfidence(Confidence.NONE));
-        assertEquals(belowLow, c1.getBelowConfidence(Confidence.LOW));
-        assertEquals(belowMed, c1.getBelowConfidence(Confidence.MEDIUM));
-        assertEquals(belowHigh, c1.getBelowConfidence(Confidence.HIGH));
-    }
-
-    @Test
-    void testPrioritySorting() {
-        List<Topic> sorted1 = new ArrayList<>(topics1.values());
-        Collections.sort(sorted1);
-
-        assertEquals(sorted1, c1.getSortedByPriority());
-
-        Topic highPriority = new Topic("high");
-        highPriority.trackStudy(LocalDate.now().minusDays(1), Confidence.NONE);
-        Topic lowPriority = new Topic("low");
-        lowPriority.trackStudy(LocalDate.now().plusDays(1), Confidence.HIGH);
-        sorted1.add(0, highPriority);
-        sorted1.add(lowPriority);
-
-        c1.add(highPriority);
-        c1.add(lowPriority);
-
-        assertEquals(sorted1, c1.getSortedByPriority());
-    }
 }

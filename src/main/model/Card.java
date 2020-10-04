@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Calendar;
-
 // A flash card with a question and answer. Extends the StudyMaterial class.
 public class Card extends StudyMaterial {
     private String answer;
