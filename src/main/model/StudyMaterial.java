@@ -41,16 +41,6 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
         this.confidence = confidence;
     }
 
-    @Override
-    //effects: returns how much more confident you are at this compared to mat using Confidence, then time since last
-    //  studied. Positive int means you know this better than mat.
-    public int compareTo(StudyMaterial mat) {
-        if (confidence.compareTo(mat.confidence) != 0) {
-            return confidence.compareTo(mat.confidence);
-        } else {
-            return getLastStudyDate().compareTo(mat.getLastStudyDate());
-        }
-    }
 
     //effects: returns the confidence of this
     public Confidence getConfidence() {
@@ -80,5 +70,22 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
 
     void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    //effects: returns how much more confident you are at this compared to mat using Confidence, then time since last
+    //  studied. Positive int means you know this better than mat.
+    public int compareTo(StudyMaterial mat) {
+        if (confidence.compareTo(mat.confidence) != 0) {
+            return confidence.compareTo(mat.confidence);
+        } else {
+            return getLastStudyDate().compareTo(mat.getLastStudyDate());
+        }
+    }
+
+    @Override
+    //effects: returns name
+    public String toString() {
+        return name;
     }
 }
