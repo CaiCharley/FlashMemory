@@ -106,13 +106,11 @@ public class FlashMemoryApp {
             return;
         }
 
-        String name;
-        String clazz = pointer.getClass().getSimpleName();
         System.out.println("Enter the name of what you want to see.");
-        name = input.nextLine();
+        String name = input.nextLine();
 
         if (pointer.contains(name)) {
-            if (clazz.equals("Topic")) {
+            if (pointer instanceof Topic) {
                 String question;
                 String answer;
                 Card c = (Card) pointer.get(name);
@@ -138,45 +136,39 @@ public class FlashMemoryApp {
     }
 
     private void addSM() {
-        String clazz = pointer.getClass().getSimpleName();
         String name;
         StudyMaterial m;
-        switch (clazz) {
-            case "Semester":
-                System.out.printf("Please enter the name of your new course you want to add to \"%s\".\n",
-                        pointer.getName());
-                name = makePrettyText(input.nextLine());
-                m = new Course(name);
+        if (pointer instanceof Semester) {
+            System.out.printf("Please enter the name of your new course you want to add to \"%s\".\n",
+                    pointer.getName());
+            name = makePrettyText(input.nextLine());
+            m = new Course(name);
 
-                pointer.add(m);
-                System.out.printf("A new course called \"%s\" has been added to \"%s\".\n", m.getName(),
-                        pointer.getName());
-                break;
-            case "Course":
-                System.out.printf("Please enter the name of your new Topic you want to add to \"%s\".\n",
-                        pointer.getName());
-                name = makePrettyText(input.nextLine());
-                m = new Topic(name);
+            pointer.add(m);
+            System.out.printf("A new course called \"%s\" has been added to \"%s\".\n", m.getName(),
+                    pointer.getName());
+        } else if (pointer instanceof Course) {
+            System.out.printf("Please enter the name of your new Topic you want to add to \"%s\".\n",
+                    pointer.getName());
+            name = makePrettyText(input.nextLine());
+            m = new Topic(name);
 
-                pointer.add(m);
-                System.out.printf("A new topic called \"%s\" has been added to \"%s\".\n",
-                        m.getName(), pointer.getName());
-                break;
-            case "Topic":
-                System.out.println("Please enter the question you want on your card.");
-                name = makePrettyText(input.nextLine());
+            pointer.add(m);
+            System.out.printf("A new topic called \"%s\" has been added to \"%s\".\n",
+                    m.getName(), pointer.getName());
+        } else if (pointer instanceof Topic) {
+            System.out.println("Please enter the question you want on your card.");
+            name = makePrettyText(input.nextLine());
 
-                System.out.println("Please enter the answer to your question you want on your card.");
-                String answer = input.nextLine();
-                m = new Card(name, answer);
+            System.out.println("Please enter the answer to your question you want on your card.");
+            String answer = input.nextLine();
+            m = new Card(name, answer);
 
-                pointer.add(m);
-                System.out.printf("A new card with \"%s\" and \"%s\" has been added to \"%s\".\n",
-                        m.getName(), answer, pointer.getName());
-                break;
-            default:
-                System.out.println("Invalid Pointer");
-                break;
+            pointer.add(m);
+            System.out.printf("A new card with \"%s\" and \"%s\" has been added to \"%s\".\n",
+                    m.getName(), answer, pointer.getName());
+        } else {
+            System.out.println("Invalid Pointer");
         }
     }
 
