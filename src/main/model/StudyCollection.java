@@ -2,23 +2,25 @@ package model;
 
 import java.util.*;
 
+// A Map of StudyMaterial, which itself is a StudyMaterial. Contains methods to add/edit/remove elements from Map
 public abstract class StudyCollection<M extends StudyMaterial> extends StudyMaterial {
+    //invariant: key of value will always be the name of the StudyMaterial
     protected Map<String, M> materialMap;
 
-    //effects: makes StudyCollection with name as id
+    //effects: makes StudyCollection with name
     public StudyCollection(String name) {
         super(name);
         this.materialMap = new HashMap<>();
     }
 
-    //effects: makes StudyCollection with name as id and confidence
+    //effects: makes StudyCollection with name and confidence
     public StudyCollection(String name, Confidence confidence) {
         super(name, confidence);
         this.materialMap = new HashMap<>();
     }
 
     //modifies: this
-    //effects: adds material to materialMap
+    //effects: adds material to materialMap with name as key
     public void add(M material) {
         materialMap.put(material.getName(), material);
     }
@@ -53,7 +55,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         return remove(material.getName());
     }
 
-    //effects: gets material in materialMap with name as key
+    //effects: gets material in materialMap with name as key. Returns null if name not in materialMap.
     public M get(String name) {
         return materialMap.get(name);
     }
@@ -95,7 +97,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         return selectedMaterials;
     }
 
-    //effect: returns an Arraylist of materials sorted by studying priority
+    //effect: returns a List of materials sorted by studying priority
     public List<M> getSortedByPriority() {
         List<M> sortedCards = new ArrayList<>(materialMap.values());
         Collections.sort(sortedCards);
@@ -107,6 +109,6 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         return materialMap.size();
     }
 
-    //effects: returns number of cards in this
+    //effects: returns number of cards in all sub-materials in materialMap
     public abstract int countCards();
 }

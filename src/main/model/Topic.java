@@ -13,16 +13,16 @@ public class Topic extends StudyCollection<Card> {
         super(name, confidence);
     }
 
-    //requires: cardQuestion must be in cards
+    //requires: cardQuestion must be in materialMap
     //modifies: this
     //effects: wrapper for editName for Card
     public Card editCardQuestion(String cardQuestion, String newQuestion) {
         return editName(cardQuestion, newQuestion);
     }
 
-    //requires: cardQuestion must be in cards
+    //requires: cardQuestion must be in materialMap
     //modifies: this
-    //effects: edits card's answer in cards
+    //effects: changes a card's answer with cardQuestion to newAnswer in materialMap
     public Card editCardAnswer(String cardQuestion, String newAnswer) {
         Card editCard = materialMap.get(cardQuestion);
         editCard.setAnswer(newAnswer);
@@ -30,7 +30,7 @@ public class Topic extends StudyCollection<Card> {
     }
 
     //modifies: this
-    //effects: adds card with q and a to cards.
+    //effects: adds card with question and answer to materialMap.
     public void add(String question, String answer) {
         add(new Card(question, answer));
     }

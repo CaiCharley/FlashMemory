@@ -1,7 +1,8 @@
 package model;
 
-// A flash card with a question and answer. Extends the StudyMaterial class.
+// A flash card with a question and answer
 public class Card extends StudyMaterial {
+    //invariant: name of this is the question
     private String answer;
 
     //effects: makes card with question and answer with whitespaces trimmed

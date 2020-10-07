@@ -11,8 +11,8 @@ public class FlashMemoryApp {
     private static final String QUIT_CMD = "quit";
     private static final String LIST_POSITION_CMD = "ls";
     private static final String GET_POSITION_CMD = ".";
-    private static final String CHECKOUT_CMD = "cd";
     private static final String BACK_CMD = "..";
+    private static final String CHECKOUT_CMD = "cd";
     private static final String EDIT_CMD = "edit";
     private static final String STUDY_CMD = "study";
     private static final String TEST_CMD = "test";
