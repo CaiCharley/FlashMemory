@@ -34,7 +34,6 @@ public class FlashMemoryApp {
         System.out.println("Goodbye!");
     }
 
-
     public FlashMemoryApp() {
         input = new Scanner(System.in);
         runApp = true;

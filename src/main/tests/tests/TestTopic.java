@@ -43,9 +43,12 @@ public class TestTopic extends TestStudyCollection<Card> {
 
     @BeforeEach
     void setUp() {
+        t1 = new Topic("Biology");
+        t2 = new Topic("Chemistry", Confidence.MEDIUM);
+
         //set up as generic StudyCollection
-        sc1 = new Topic("Biology");
-        sc2 = new Topic("Chemistry", Confidence.MEDIUM);
+        sc1 = t1;
+        sc2 = t2;
 
         //set up unique StudyMaterials
         highPrioritySM = new Card("bad q", "bad q");
@@ -55,10 +58,6 @@ public class TestTopic extends TestStudyCollection<Card> {
 
         map1 = makeTestCards(10, 2);
         map2 = makeTestCards(4, 1);
-
-        //cast generic to test class specific methods
-        t1 = ((Topic) sc1);
-        t2 = ((Topic) sc2);
 
         t1.addAll(map1.values());
         t2.addAll(map2.values());

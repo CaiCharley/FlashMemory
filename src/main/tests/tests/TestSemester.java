@@ -3,7 +3,6 @@ package tests;
 import model.Confidence;
 import model.Course;
 import model.Semester;
-import model.StudyCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,9 +41,12 @@ class TestSemester extends TestStudyCollection<Course> {
 
     @BeforeEach
     void setUp() {
+        s1 = new Semester("2020W1");
+        s2 = new Semester("2019W2");
+
         //set up as generic StudyCollection
-        sc1 = new Semester("2020W1");
-        sc2 = new Semester("2019W2");
+        sc1 = s1;
+        sc2 = s2;
 
         //set up unique StudyMaterials
         highPrioritySM = new Course("Roman History");
@@ -54,10 +56,6 @@ class TestSemester extends TestStudyCollection<Course> {
 
         map1 = makeTestCourses(4,5, 6, 1);
         map2 = makeTestCourses(4,3, 6, 1);
-
-        //cast generic to test class specific methods
-        s1 = ((Semester) sc1);
-        s2 = ((Semester) sc2);
 
         s1.addAll(map1.values());
         s2.addAll(map2.values());

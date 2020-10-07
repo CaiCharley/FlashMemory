@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class TestStudyMaterial {
     Card c0;
@@ -16,17 +17,17 @@ public abstract class TestStudyMaterial {
 
     @Test
     void testCompareTo() {
-        assertEquals(3, c3.compareTo(c0));
-        assertEquals(2, c2.compareTo(c0));
-        assertEquals(1, c1.compareTo(c0));
-        assertEquals(1, c2.compareTo(c1));
+        assertTrue(c3.compareTo(c0) > 0);
+        assertTrue(c2.compareTo(c0) > 0);
+        assertTrue(c1.compareTo(c0) > 0);
+        assertTrue(c2.compareTo(c1) > 0);
+        assertTrue(c1.compareTo(c3) < 0);
         assertEquals(0, c2.compareTo(c2));
-        assertEquals(-2, c1.compareTo(c3));
 
         c3.trackStudy(LocalDate.now().minusDays(4), Confidence.MEDIUM);
 
-        assertEquals(1, c2.compareTo(c3));
-        assertEquals(2, c2.compareTo(c0));
+        assertTrue(c2.compareTo(c3) > 0);
+        assertTrue(c2.compareTo(c0) > 0);
     }
 
     @Test

@@ -39,9 +39,12 @@ class TestCourse extends TestStudyCollection<Topic> {
 
     @BeforeEach
     void setUp() {
+        c1 = new Course("MICB 201");
+        c2 = new Course("CPSC 210", Confidence.HIGH);
+
         //set up as generic StudyCollection
-        sc1 = new Course("MICB 201");
-        sc2 = new Course("CPSC 210", Confidence.HIGH);
+        sc1 = c1;
+        sc2 = c2;
 
         //set up unique StudyMaterials
         highPrioritySM = new Topic("Roman History");
@@ -51,10 +54,6 @@ class TestCourse extends TestStudyCollection<Topic> {
 
         map1 = makeTestTopics(5, 6, 1);
         map2 = makeTestTopics(3, 6, 1);
-
-        //cast generic to test class specific methods
-        c1 = ((Course) sc1);
-        c2 = ((Course) sc2);
 
         c1.addAll(map1.values());
         c2.addAll(map2.values());
