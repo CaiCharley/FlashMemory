@@ -2,7 +2,6 @@ package ui;
 
 import model.*;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -29,6 +28,8 @@ public class FlashMemoryApp {
     private StudyCollection pointer;
     private Stack<StudyCollection> breadcrumb;
 
+    //modifies: this
+    //effects: fills commands with command:function entries
     private void makeCommandMap() {
         commands = new HashMap<>();
 
@@ -50,6 +51,9 @@ public class FlashMemoryApp {
         System.out.println("Goodbye!");
     }
 
+    //modifies: this
+    //effects: makes new FlashMemoryApp by starting input, runApp and makes commandMap. Asks user for what their new
+    //         semester is called. Instantiates pointer and breadcrumb and sets pointer to new semester.
     public FlashMemoryApp() {
         input = new Scanner(System.in);
         runApp = true;
@@ -63,6 +67,8 @@ public class FlashMemoryApp {
         System.out.printf("Your new semester called \"%s\" has been created.\n\n", str);
     }
 
+    //effects: lists available commands and acts as main program loop for each user input
+    //accreditation: modified fromFitLifeGymKiosk
     private void run() {
         System.out.println("What would you like to do?");
         printCommands();
@@ -77,6 +83,8 @@ public class FlashMemoryApp {
         }
     }
 
+    //effects:  checks input > 0 and the command exists. Calls the function mapped to the command in commands.
+    //          otherwise prints invalid input.
     private void parseCommand(String command) {
         if (command.length() > 0 && commands.containsKey(command)) {
             commands.get(command).run();
@@ -85,10 +93,14 @@ public class FlashMemoryApp {
         }
     }
 
+    //modifies: this
+    //effects: set runApp to false
     private void quit() {
         runApp = false;
     }
 
+    //modifies: this
+    //effects: Pops last position of breadcrumb if it exists and sets pointer to that. Prints the new pointer.
     private void back() {
         if (!breadcrumb.empty()) {
             pointer = breadcrumb.pop();
@@ -98,6 +110,10 @@ public class FlashMemoryApp {
         }
     }
 
+    //modifies: this
+    //effects: if pointer has study materials within it, asks user which one they want to see. If pointer is topic,
+    //         just print out card question and answer. Otherwise, set pointer to the object user wants to see. Print
+    //         invalid if user has entered something that does not exist in current pointer.
     private void checkout() {
         if (pointer.size() == 0) {
             System.out.printf("There is nothing under \"%s\".\n", pointer.getName());
@@ -109,12 +125,10 @@ public class FlashMemoryApp {
 
         if (pointer.contains(name)) {
             if (pointer instanceof Topic) {
-                String question;
-                String answer;
                 Card c = (Card) pointer.get(name);
 
-                question = c.getQuestion();
-                answer = c.getAnswer();
+                String question = c.getQuestion();
+                String answer = c.getAnswer();
 
                 System.out.printf("Question:\n%s\nAnswer:\n%s\n", question, answer);
             } else {
@@ -127,12 +141,16 @@ public class FlashMemoryApp {
         }
     }
 
+    //effects: tells user what the pointer is at
     private void getPosition() {
         String clazz = pointer.getClass().getSimpleName();
         System.out.printf("You are looking at a %s called \"%s\" with %d thing(s) to study.\n",
                 clazz, pointer.getName(), pointer.size());
     }
 
+    //modifies: this
+    //effects: if pointer is at Semester or Course, make a Course or Topic with user selected name respectively.
+    //         if pointer is a Topic, makes a new card under Topic with user defined question and answer
     private void handleAddStudyMaterial() {
         if (pointer instanceof Semester) {
             System.out.printf("Please enter the name of your new course you want to add to \"%s\".\n",
@@ -165,6 +183,7 @@ public class FlashMemoryApp {
         }
     }
 
+    //effects: lists all study material with last study date and confidence under the pointer
     private void listPosition() {
         if (pointer.getSortedByPriority().isEmpty()) {
             System.out.printf("There is nothing under \"%s\".\n", pointer.getName());
@@ -176,6 +195,7 @@ public class FlashMemoryApp {
         }
     }
 
+    //effects: prints out help menu with commands
     private void printCommands() {
         System.out.printf("Enter \"%s\" to add an element to what you are looking at.\n", ADD_CMD);
         System.out.printf("Enter \"%s\" to see what you are currently looking at.\n", GET_POSITION_CMD);
@@ -187,6 +207,7 @@ public class FlashMemoryApp {
     }
 
     //effects: removes white space and quotation marks around s, lower case
+    //accreditation: FitLifeGymKiosk
     private String makePrettyCommand(String s) {
         s = s.toLowerCase();
         s = s.trim();
@@ -195,6 +216,7 @@ public class FlashMemoryApp {
     }
 
     //effects: removes white space and quotation marks around s
+    //accreditation: modified from FitLifeGymKiosk
     private String makePrettyText(String s) {
         s = s.trim();
         s = s.replaceAll("\"|\'", "");
@@ -202,6 +224,7 @@ public class FlashMemoryApp {
     }
 
     //effects: stops receiving user input
+    //accreditation: FitLifeGymKiosk
     public void end() {
         System.out.println("Quitting...");
         input.close();
