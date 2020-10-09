@@ -3,6 +3,8 @@ package ui;
 import model.*;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -19,11 +21,25 @@ public class FlashMemoryApp {
     private static final String ADD_CMD = "add";
     private static final String HELP_CMD = "help";
 
+    private static Map<String, Runnable> commands;
+
     private Scanner input;
     private Semester semester;
     private boolean runApp;
     private StudyCollection pointer;
     private Stack<StudyCollection> breadcrumb;
+
+    private void makeCommandMap() {
+        commands = new HashMap<>();
+
+        commands.put(ADD_CMD, this::handleAddStudyMaterial);
+        commands.put(LIST_POSITION_CMD, this::listPosition);
+        commands.put(GET_POSITION_CMD, this::getPosition);
+        commands.put(CHECKOUT_CMD, this::checkout);
+        commands.put(BACK_CMD, this::back);
+        commands.put(HELP_CMD, this::printCommands);
+        commands.put(QUIT_CMD, this::quit);
+    }
 
     public static void main(String[] args) {
         FlashMemoryApp app = new FlashMemoryApp();
@@ -37,6 +53,7 @@ public class FlashMemoryApp {
     public FlashMemoryApp() {
         input = new Scanner(System.in);
         runApp = true;
+        makeCommandMap();
 
         System.out.println("Please enter the name of your semester.");
         String str = input.nextLine().trim();
@@ -61,34 +78,15 @@ public class FlashMemoryApp {
     }
 
     private void parseCommand(String command) {
-        if (command.length() > 0) {
-            switch (command) {
-                case ADD_CMD:
-                    addSM();
-                    break;
-                case LIST_POSITION_CMD:
-                    listPosition();
-                    break;
-                case GET_POSITION_CMD:
-                    getPosition();
-                    break;
-                case CHECKOUT_CMD:
-                    checkout();
-                    break;
-                case BACK_CMD:
-                    back();
-                    break;
-                case HELP_CMD:
-                    printCommands();
-                    break;
-                case QUIT_CMD:
-                    runApp = false;
-                    break;
-                default:
-                    System.out.println("Invalid input. Please try again.");
-                    break;
-            }
+        if (command.length() > 0 && commands.containsKey(command)) {
+            commands.get(command).run();
+        } else {
+            System.out.println("Invalid input. Please try again.");
         }
+    }
+
+    private void quit() {
+        runApp = false;
     }
 
     private void back() {
@@ -135,40 +133,35 @@ public class FlashMemoryApp {
                 clazz, pointer.getName(), pointer.size());
     }
 
-    private void addSM() {
-        String name;
-        StudyMaterial m;
+    private void handleAddStudyMaterial() {
         if (pointer instanceof Semester) {
             System.out.printf("Please enter the name of your new course you want to add to \"%s\".\n",
                     pointer.getName());
-            name = makePrettyText(input.nextLine());
-            m = new Course(name);
 
-            pointer.add(m);
-            System.out.printf("A new course called \"%s\" has been added to \"%s\".\n", m.getName(),
+            String name = makePrettyText(input.nextLine());
+            pointer.add(new Course(name));
+
+            System.out.printf("A new course called \"%s\" has been added to \"%s\".\n", name,
                     pointer.getName());
         } else if (pointer instanceof Course) {
             System.out.printf("Please enter the name of your new Topic you want to add to \"%s\".\n",
                     pointer.getName());
-            name = makePrettyText(input.nextLine());
-            m = new Topic(name);
 
-            pointer.add(m);
+            String name = makePrettyText(input.nextLine());
+            pointer.add(new Topic(name));
+
             System.out.printf("A new topic called \"%s\" has been added to \"%s\".\n",
-                    m.getName(), pointer.getName());
+                    name, pointer.getName());
         } else if (pointer instanceof Topic) {
             System.out.println("Please enter the question you want on your card.");
-            name = makePrettyText(input.nextLine());
+            String name = makePrettyText(input.nextLine());
 
             System.out.println("Please enter the answer to your question you want on your card.");
-            String answer = input.nextLine();
-            m = new Card(name, answer);
+            String answer = makePrettyText(input.nextLine());
 
-            pointer.add(m);
+            pointer.add(new Card(name, answer));
             System.out.printf("A new card with \"%s\" and \"%s\" has been added to \"%s\".\n",
-                    m.getName(), answer, pointer.getName());
-        } else {
-            System.out.println("Invalid Pointer");
+                    name, answer, pointer.getName());
         }
     }
 
@@ -187,7 +180,7 @@ public class FlashMemoryApp {
         System.out.printf("Enter \"%s\" to add an element to what you are looking at.\n", ADD_CMD);
         System.out.printf("Enter \"%s\" to see what you are currently looking at.\n", GET_POSITION_CMD);
         System.out.printf("Enter \"%s\" to list things to study.\n", LIST_POSITION_CMD);
-        System.out.printf("Enter \"%s\" to look at subitem.\n", CHECKOUT_CMD);
+        System.out.printf("Enter \"%s\" to look at sub-item.\n", CHECKOUT_CMD);
         System.out.printf("Enter \"%s\" to go back.\n", BACK_CMD);
         System.out.printf("Enter \"%s\" to see commands.\n", HELP_CMD);
         System.out.printf("Enter \"%s\" to quit.\n", QUIT_CMD);
