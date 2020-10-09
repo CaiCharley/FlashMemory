@@ -5,7 +5,7 @@ public class Card extends StudyMaterial {
     //invariant: name of this is the question
     private String answer;
 
-    //effects: makes card with question and answer with whitespaces trimmed
+    //effects: makes card with question and answer
     public Card(String question, String answer) {
         super(question);
         this.answer = answer;
@@ -18,7 +18,7 @@ public class Card extends StudyMaterial {
     }
 
     //getters and setters
-    public void setAnswer(String answer) {
+    protected void setAnswer(String answer) {
         this.answer = answer;
     }
 

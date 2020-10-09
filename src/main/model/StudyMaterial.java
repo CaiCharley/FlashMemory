@@ -73,7 +73,7 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
 
     @Override
     //effects: returns how much more confident you are at this compared to mat using Confidence, then time since last
-    //  studied. Positive int means you know this better than mat.
+    //         studied. Positive int means you know this better than mat.
     public int compareTo(StudyMaterial mat) {
         if (confidence.compareTo(mat.confidence) != 0) {
             return confidence.compareTo(mat.confidence);

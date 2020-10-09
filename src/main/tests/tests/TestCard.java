@@ -27,10 +27,6 @@ public class TestCard extends TestStudyMaterial {
         assertEquals(c0.getQuestion(), c0.getName());
         assertEquals("A = πr^2", c1.getAnswer());
         assertEquals(c1.getQuestion(), c1.getName());
-
-        c0.setAnswer("Chloroplast");
-
-        assertEquals("Chloroplast", c0.getAnswer());
     }
 
 }
