@@ -19,6 +19,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         this.materialMap = new HashMap<>();
     }
 
+    //requires: material must not already be in map
     //modifies: this
     //effects: adds material to materialMap with name as key
     public void add(M material) {
@@ -33,7 +34,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         }
     }
 
-    //requires: name must be in materialMap's keys
+    //requires: name must be in materialMap's keys and new name must not already exist
     //modifies: this
     //effects: edits material's name in materialMap and updates key of material. returns edited material
     public M editName(String name, String newName) {
