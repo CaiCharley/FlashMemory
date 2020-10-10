@@ -67,6 +67,8 @@ public class TestTopic extends TestStudyCollection<Card> {
     void testConstructor() {
         assertEquals("Biology", t1.getName());
         assertEquals("Chemistry", t2.getName());
+        assertEquals("Biology", t1.toString());
+        assertEquals("Chemistry", t2.toString());
 
         assertEquals(Confidence.NONE, t1.getConfidence());
         assertEquals(Confidence.MEDIUM, t2.getConfidence());

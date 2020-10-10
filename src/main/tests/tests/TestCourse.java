@@ -63,6 +63,8 @@ class TestCourse extends TestStudyCollection<Topic> {
     void testConstructor() {
         assertEquals("MICB 201", c1.getName());
         assertEquals("CPSC 210", c2.getName());
+        assertEquals("MICB 201", c1.toString());
+        assertEquals("CPSC 210", c2.toString());
 
         assertEquals(Confidence.NONE, c1.getConfidence());
         assertEquals(Confidence.HIGH, c2.getConfidence());
