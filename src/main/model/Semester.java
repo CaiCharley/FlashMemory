@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 // A semester containing multiple Courses. Extends StudyCollection
 public class Semester extends StudyCollection<Course> {
 
@@ -15,6 +18,17 @@ public class Semester extends StudyCollection<Course> {
         for (Course c : materialMap.values()) {
             cards += c.countCards();
         }
+        return cards;
+    }
+
+    @Override
+    public Collection<Card> getAllCards() {
+        Collection<Card> cards = new ArrayList<>();
+
+        for (Course c : materialMap.values()) {
+            cards.addAll(c.getAllCards());
+        }
+
         return cards;
     }
 }

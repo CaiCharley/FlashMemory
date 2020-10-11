@@ -1,5 +1,6 @@
 package tests;
 
+import model.Card;
 import model.Confidence;
 import model.Course;
 import model.Topic;
@@ -101,5 +102,20 @@ class TestCourse extends TestStudyCollection<Topic> {
         assertEquals(14, c2.countCards());
     }
 
+    @Test
+    void testGetAllCards() {
+        Collection<Card> cards1 = new ArrayList<>();
+        Collection<Card> cards2 = new ArrayList<>();
+
+        for (Topic t : map1.values()) {
+            cards1.addAll(t.getAllCards());
+        }
+        assertTrue(cards1.containsAll(c1.getAllCards()));
+
+        for (Topic t : map2.values()) {
+            cards2.addAll(t.getAllCards());
+        }
+        assertTrue(cards2.containsAll(c2.getAllCards()));
+    }
 
 }

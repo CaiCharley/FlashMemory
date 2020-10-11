@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 // A course containing multiple Topics. Extends StudyCollection
 public class Course extends StudyCollection<Topic> {
 
@@ -20,6 +23,17 @@ public class Course extends StudyCollection<Topic> {
         for (Topic t : materialMap.values()) {
             cards += t.countCards();
         }
+        return cards;
+    }
+
+    @Override
+    public Collection<Card> getAllCards() {
+        Collection<Card> cards = new ArrayList<>();
+
+        for (Topic t : materialMap.values()) {
+            cards.addAll(t.getAllCards());
+        }
+
         return cards;
     }
 }

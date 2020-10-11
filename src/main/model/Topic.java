@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Collection;
+
 // a topic containing many cards in a map that you can study
 public class Topic extends StudyCollection<Card> {
 
@@ -39,5 +41,11 @@ public class Topic extends StudyCollection<Card> {
     //effects: returns total number of cards in this
     public int countCards() {
         return size();
+    }
+
+    @Override
+    //effects: returns all the cards in this topic as a collection
+    public Collection<Card> getAllCards() {
+        return getAll().values();
     }
 }

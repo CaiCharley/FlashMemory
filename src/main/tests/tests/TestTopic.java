@@ -7,10 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestTopic extends TestStudyCollection<Card> {
     Topic t1;
@@ -109,5 +112,14 @@ public class TestTopic extends TestStudyCollection<Card> {
         assertEquals("a add2", t2.get("q add2").getAnswer());
         assertEquals(Confidence.NONE, t2.get("q add2").getConfidence());
         assertEquals(6, t2.countCards());
+    }
+
+    @Test
+    void testGetAllCards() {
+        Collection<Card> cards1 = map1.values();
+        assertTrue(cards1.containsAll(t1.getAllCards()));
+
+        Collection<Card> cards2 = map2.values();
+        assertTrue(cards2.containsAll(t2.getAllCards()));
     }
 }

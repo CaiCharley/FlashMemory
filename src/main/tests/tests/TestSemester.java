@@ -1,16 +1,17 @@
 package tests;
 
-import model.Confidence;
-import model.Course;
-import model.Semester;
+import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class TestSemester extends TestStudyCollection<Course> {
@@ -54,8 +55,8 @@ class TestSemester extends TestStudyCollection<Course> {
         highPrioritySM.trackStudy(LocalDate.now().minusDays(7), Confidence.NONE);
         lowPrioritySM.trackStudy(Confidence.HIGH);
 
-        map1 = makeTestCourses(4,5, 6, 1);
-        map2 = makeTestCourses(4,3, 6, 1);
+        map1 = makeTestCourses(4, 5, 6, 1);
+        map2 = makeTestCourses(4, 3, 6, 1);
 
         s1.addAll(map1.values());
         s2.addAll(map2.values());
@@ -72,5 +73,25 @@ class TestSemester extends TestStudyCollection<Course> {
         s1.get("course3").get("t1").add("new q", "new a");
 
         assertEquals(124, s1.countCards());
+    }
+
+    @Test
+    void testGetAllCards() {
+        Collection<Card> cards1 = new ArrayList<>();
+        Collection<Card> cards2 = new ArrayList<>();
+
+        for (Course c : map1.values()) {
+            for (Topic t : c.getAll().values()) {
+                cards1.addAll(t.getAllCards());
+            }
+        }
+        assertTrue(cards1.containsAll(s1.getAllCards()));
+
+        for (Course c : map2.values()) {
+            for (Topic t : c.getAll().values()) {
+                cards2.addAll(t.getAllCards());
+            }
+        }
+        assertTrue(cards2.containsAll(s2.getAllCards()));
     }
 }
