@@ -2,10 +2,7 @@ package ui;
 
 import model.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 public class FlashMemoryApp {
 
@@ -14,6 +11,7 @@ public class FlashMemoryApp {
     private static final String BACK_CMD = "..";
     private static final String CHECKOUT_CMD = "cd";
     private static final String ADD_CMD = "add";
+    private static final String REMOVE_CMD = "remove";
     private static final String EDIT_CMD = "edit";
     private static final String STUDY_CMD = "study";
     private static final String TEST_CMD = "test";
@@ -38,13 +36,13 @@ public class FlashMemoryApp {
         commands.put(BACK_CMD, this::back);
         commands.put(CHECKOUT_CMD, this::checkout);
         commands.put(ADD_CMD, this::handleAddStudyMaterial);
+        commands.put(REMOVE_CMD, this::removeMaterial);
         commands.put(EDIT_CMD, this::editName);
         commands.put(STUDY_CMD, this::study);
         commands.put(TEST_CMD, this::test);
         commands.put(HELP_CMD, this::printCommands);
         commands.put(QUIT_CMD, this::quit);
     }
-
 
     public static void main(String[] args) {
         FlashMemoryApp app = new FlashMemoryApp();
@@ -64,7 +62,7 @@ public class FlashMemoryApp {
         makeCommandMap();
 
         System.out.println("Please enter the name of your semester.");
-        String str = input.nextLine().trim();
+        String str = makePrettyText(input.nextLine());
         semester = new Semester(str);
         breadcrumb = new Stack<>();
         pointer = semester;
@@ -102,11 +100,11 @@ public class FlashMemoryApp {
     private void editName() {
         if (pointer.size() > 0) {
             System.out.println("Enter the name of the thing you would like to change.");
-            String oldName = input.nextLine();
+            String oldName = makePrettyText(input.nextLine());
 
             if (pointer.contains(oldName)) {
                 System.out.println("Enter the new name you would like to set");
-                String newName = input.nextLine();
+                String newName = makePrettyText(input.nextLine());
 
                 if (!pointer.contains(newName)) {
                     pointer.editName(oldName, newName);
@@ -127,12 +125,10 @@ public class FlashMemoryApp {
     private void study() {
         if (pointer.size() > 0) {
             System.out.println("What would you like to document studying?");
-            String material = input.nextLine();
+            String material = makePrettyText(input.nextLine());
 
             if (pointer.contains(material)) {
-                System.out.println("How confident are you with " + material
-                        + "?\nEnter a number: 0-None, 1-Low, 2-Medium, or 3-High");
-                parseStudyConfidence(material);
+                parseStudyConfidence(pointer.get(material));
             } else {
                 System.out.println(pointer + " does not contain " + material + ". Try again");
             }
@@ -146,29 +142,63 @@ public class FlashMemoryApp {
     //modifies: this
     //effects: gets [0,3] value from user and studies m with confidence mapped from user. Loops until
     //         correct value is entered
-    private void parseStudyConfidence(String m) {
-        try {
-            int confidence = input.nextInt();
-            if (!(confidence >= 0 && confidence < 4)) {
-                throw new Exception();
-            }
+    private void parseStudyConfidence(StudyMaterial m) {
+        System.out.println("How confident are you with " + m
+                + "?\nEnter a number: 0-None, 1-Low, 2-Medium, or 3-High");
+        boolean valid = false;
+        while (!valid) {
+            try {
+                int confidence = input.nextInt();
+                if (!(confidence >= 0 && confidence < 4)) {
+                    throw new Exception();
+                }
+                m.trackStudy(Confidence.values()[confidence]);
 
-            if (confidence == 0) {
-                pointer.get(m).trackStudy(Confidence.NONE);
-            } else if (confidence == 1) {
-                pointer.get(m).trackStudy(Confidence.LOW);
-            } else if (confidence == 2) {
-                pointer.get(m).trackStudy(Confidence.MEDIUM);
-            } else {
-                pointer.get(m).trackStudy(Confidence.HIGH);
+                System.out.println(m + " has been studied");
+                valid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid input. You must enter number from 0-3.");
             }
-            System.out.println(m + " has been studied");
-        } catch (Exception e) {
-            System.out.println("Invalid input. You must enter number from 0-4.");
         }
     }
 
+    //effects: prints the number of cards under the pointer and asks user if he wants to study them. Studies cards
+    //         and calls study on pointer
     private void test() {
+        if (pointer.countCards() > 0) {
+            System.out.printf("%s has %d cards. Would you like to test yourself? (y/n)\n",
+                    pointer, pointer.countCards());
+            String str = makePrettyCommand(input.nextLine());
+
+            if (str.equals("y") || str.equals("yes")) {
+                testCards(pointer.getAllCards());
+                parseStudyConfidence(pointer);
+            }
+        } else {
+            System.out.println("There are no cards to study in " + pointer);
+        }
+    }
+
+    //requires: allCards not be empty
+    //effects: shuffles cards in all cards and presents them to user, then ask for his confidence. User can break by
+    //         enter quit
+    private void testCards(Collection allCards) {
+        System.out.printf("Press enter anything to be shown the answer, enter %s to leave\n", QUIT_CMD);
+        List<Card> cards = new ArrayList<>(pointer.getAllCards());
+        Collections.shuffle(cards);
+        String str;
+        for (Card c : cards) {
+            System.out.println(c.getQuestion());
+
+            str = makePrettyCommand(input.nextLine());
+            if (str.equals("quit")) {
+                System.out.println("Testing Stopped");
+                break;
+            }
+            System.out.println(c.getAnswer());
+            System.out.println("Your previous confidence was " + c.getConfidence());
+            parseStudyConfidence(c);
+        }
     }
 
     //modifies: this
@@ -199,7 +229,7 @@ public class FlashMemoryApp {
         }
 
         System.out.println("Enter the name of what you want to see.");
-        String name = input.nextLine();
+        String name = makePrettyText(input.nextLine());
 
         if (pointer.contains(name)) {
             if (pointer instanceof Topic) {
@@ -279,7 +309,7 @@ public class FlashMemoryApp {
         System.out.println("Please enter the question you want on your card.");
         String name = makePrettyText(input.nextLine());
 
-        if (pointer.contains(name)) {
+        if (!pointer.contains(name)) {
             System.out.println("Please enter the answer to your question you want on your card.");
             String answer = makePrettyText(input.nextLine());
 
@@ -292,6 +322,25 @@ public class FlashMemoryApp {
 
     }
 
+    //modifies: this
+    //effects: removes user specified material from pointer
+    private void removeMaterial() {
+        String material;
+
+        if (pointer.size() > 0) {
+            System.out.println("What would you like to remove from " + pointer);
+            material = makePrettyText(input.nextLine());
+            if (pointer.contains(material)) {
+                pointer.remove(material);
+                System.out.println(material + " has been removed");
+            } else {
+                System.out.println(pointer + " does not contain " + material);
+            }
+        } else {
+            System.out.println("There is nothing to remove from " + pointer);
+        }
+    }
+
     //effects: lists all study material with last study date and confidence under the pointer
     private void listPosition() {
         if (pointer.getSortedByPriority().isEmpty()) {
@@ -299,7 +348,8 @@ public class FlashMemoryApp {
         } else {
             for (Object m : pointer.getSortedByPriority()) {
                 StudyMaterial sm = ((StudyMaterial) m);
-                System.out.println(m + ": Last Studied on " + sm.getLastStudyDate() + " at " + sm.getConfidence());
+                System.out.printf("%s: Studied %d time(s), last modified on %s at %s\n",
+                        sm, sm.getTimesStudied(), sm.getLastStudyDate(), sm.getConfidence());
             }
         }
     }
@@ -311,8 +361,10 @@ public class FlashMemoryApp {
         System.out.printf("Enter \"%s\" to go back.\n", BACK_CMD);
         System.out.printf("Enter \"%s\" to look at sub-item.\n", CHECKOUT_CMD);
         System.out.printf("Enter \"%s\" to add an element to what you are looking at.\n", ADD_CMD);
+        System.out.printf("Enter \"%s\" to remove an element from you are looking at.\n", REMOVE_CMD);
         System.out.printf("Enter \"%s\" to edit the name of an element.\n", EDIT_CMD);
         System.out.printf("Enter \"%s\" to record that you studied something.\n", STUDY_CMD);
+        System.out.printf("Enter \"%s\" to test yourself on all the cards in what you are looking at.\n", STUDY_CMD);
         System.out.printf("Enter \"%s\" to see commands.\n", HELP_CMD);
         System.out.printf("Enter \"%s\" to quit.\n", QUIT_CMD);
     }
