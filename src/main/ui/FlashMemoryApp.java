@@ -70,7 +70,7 @@ public class FlashMemoryApp {
     }
 
     //effects: lists available commands and acts as main program loop for each user input
-    //accreditation: modified fromFitLifeGymKiosk
+    //accreditation: modified from FitLifeGymKiosk
     private void run() {
         System.out.println("What would you like to do?");
         printCommands();
@@ -162,7 +162,7 @@ public class FlashMemoryApp {
     }
 
     //effects: prints the number of cards under the pointer and asks user if he wants to study them. Studies cards
-    //         and calls study on pointer
+    //         and calls study on pointer after cards are studied
     private void test() {
         if (pointer.countCards() > 0) {
             System.out.printf("%s has %d cards. Would you like to test yourself? (y/n)\n",
@@ -181,7 +181,7 @@ public class FlashMemoryApp {
     //requires: allCards not be empty
     //effects: shuffles cards in all cards and presents them to user, then ask for his confidence. User can break by
     //         enter quit
-    private void testCards(Collection allCards) {
+    private void testCards(Collection<Card> allCards) {
         System.out.println("Press enter anything to be shown the answer, enter \"q\" to leave");
         List<Card> cards = new ArrayList<>(allCards);
         Collections.shuffle(cards);
