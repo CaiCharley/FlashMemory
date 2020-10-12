@@ -145,17 +145,16 @@ public class FlashMemoryApp {
     private void parseStudyConfidence(StudyMaterial m) {
         System.out.println("How confident are you with " + m
                 + "?\nEnter a number: 0-None, 1-Low, 2-Medium, or 3-High");
-        boolean valid = false;
-        while (!valid) {
+        while (true) {
             try {
-                int confidence = input.nextInt();
+                int confidence = Integer.parseInt(input.next());
                 if (!(confidence >= 0 && confidence < 4)) {
                     throw new Exception();
                 }
                 m.trackStudy(Confidence.values()[confidence]);
 
                 System.out.println(m + " has been studied");
-                valid = true;
+                break;
             } catch (Exception e) {
                 System.out.println("Invalid input. You must enter number from 0-3.");
             }
@@ -183,17 +182,20 @@ public class FlashMemoryApp {
     //effects: shuffles cards in all cards and presents them to user, then ask for his confidence. User can break by
     //         enter quit
     private void testCards(Collection allCards) {
-        System.out.printf("Press enter anything to be shown the answer, enter %s to leave\n", QUIT_CMD);
-        List<Card> cards = new ArrayList<>(pointer.getAllCards());
+        System.out.println("Press enter anything to be shown the answer, enter \"q\" to leave");
+        List<Card> cards = new ArrayList<>(allCards);
         Collections.shuffle(cards);
-        String str;
         for (Card c : cards) {
             System.out.println(c.getQuestion());
-
-            str = makePrettyCommand(input.nextLine());
-            if (str.equals("quit")) {
-                System.out.println("Testing Stopped");
-                break;
+            try {
+                int str;
+                str = System.in.read();
+                if (str == 113) { // q = 113
+                    System.out.println("Testing Stopped");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
             System.out.println(c.getAnswer());
             System.out.println("Your previous confidence was " + c.getConfidence());
