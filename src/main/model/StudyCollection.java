@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -119,7 +120,18 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
     public abstract Collection<Card> getAllCards();
 
     @Override
+    //effects: gets jsonObject of super (StudyMaterial) and adds study materials in material map to jsonObject
+    //         as jsonArray
     public JSONObject toJson() {
-        return super.toJson();
+        JSONObject json = super.toJson();
+        JSONArray jsonMaterialMap = new JSONArray();
+
+        for (M sm : materialMap.values()) {
+            jsonMaterialMap.put(sm.toJson());
+        }
+
+        json.put("materialMap", jsonMaterialMap);
+
+        return json;
     }
 }

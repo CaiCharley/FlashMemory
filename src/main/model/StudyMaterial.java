@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
@@ -93,7 +94,27 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
 
     @Override
     public JSONObject toJson() {
-        //TODO: Implement toJson
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("confidence", confidence);
+        json.put("studyDates", studyDatesToJson());
+
+        return json;
+    }
+
+    //effects: returns jsonArray with studyDates in JsonArray
+    private JSONArray studyDatesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (LocalDate date : studyDates) {
+            JSONObject jsonDate = new JSONObject();
+            jsonDate.put("year", date.getYear());
+            jsonDate.put("month", date.getMonthValue());
+            jsonDate.put("day", date.getDayOfMonth());
+
+            jsonArray.put(jsonDate);
+        }
+
+        return jsonArray;
     }
 }

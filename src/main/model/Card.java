@@ -34,7 +34,10 @@ public class Card extends StudyMaterial {
     }
 
     @Override
+    //effects: returns JSONObject of super (StudyMaterial) and adds answer
     public JSONObject toJson() {
-        return super.toJson();
+        JSONObject json = super.toJson();
+        json.put("answer", answer);
+        return json;
     }
 }
