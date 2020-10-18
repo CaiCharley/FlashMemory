@@ -63,6 +63,19 @@ class TestSemester extends TestStudyCollection<Course> {
     }
 
     @Test
+    void testConstructor() {
+        assertEquals("2020W1", s1.getName());
+        assertEquals("2019W2", s2.getName());
+        assertEquals("2020W1", s1.toString());
+        assertEquals("2019W2", s2.toString());
+
+        assertEquals(Confidence.NONE, s1.getConfidence());
+        assertEquals(Confidence.NONE, s2.getConfidence());
+        assertEquals(Course.class, sc1.subtype);
+        assertEquals(Course.class, sc2.subtype);
+    }
+
+    @Test
     void testCountCards() {
         assertEquals(120, s1.countCards());
         assertEquals(72, s2.countCards());

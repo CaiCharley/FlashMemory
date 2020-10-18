@@ -3,23 +3,27 @@ package model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 // A Map of StudyMaterial, which itself is a StudyMaterial. Contains methods to add/edit/remove elements from Map
 public abstract class StudyCollection<M extends StudyMaterial> extends StudyMaterial {
     //invariant: key of value will always be the name of the StudyMaterial
     protected Map<String, M> materialMap;
+    public final Class<M> subtype;
 
     //effects: makes StudyCollection with name
     public StudyCollection(String name) {
         super(name);
         this.materialMap = new HashMap<>();
+        subtype = (Class<M>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     //effects: makes StudyCollection with name and confidence
     public StudyCollection(String name, Confidence confidence) {
         super(name, confidence);
         this.materialMap = new HashMap<>();
+        subtype = (Class<M>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     //requires: name must not be a key in material map

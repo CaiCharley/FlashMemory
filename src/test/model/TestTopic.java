@@ -74,6 +74,8 @@ public class TestTopic extends TestStudyCollection<Card> {
 
         assertEquals(Confidence.NONE, t1.getConfidence());
         assertEquals(Confidence.MEDIUM, t2.getConfidence());
+        assertEquals(Card.class, sc1.subtype);
+        assertEquals(Card.class, sc2.subtype);
     }
 
     @Test

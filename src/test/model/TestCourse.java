@@ -69,6 +69,8 @@ class TestCourse extends TestStudyCollection<Topic> {
 
         assertEquals(Confidence.NONE, c1.getConfidence());
         assertEquals(Confidence.HIGH, c2.getConfidence());
+        assertEquals(Topic.class, sc1.subtype);
+        assertEquals(Topic.class, sc2.subtype);
     }
 
 
