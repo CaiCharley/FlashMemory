@@ -18,5 +18,5 @@ Phase 1
 - As a user, I want view what things I should study next
 
 Phase 2
-- As a user, I want to be able to save my Semester to a file
+- As a user, I want to be able to save my Semester to a file and be prompted to before quitting
 - As a user, i want to be able to load my Semester from a file
