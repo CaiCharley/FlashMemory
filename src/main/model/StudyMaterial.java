@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +10,7 @@ import java.util.List;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 // Represents some material with a name that you need to study. Records how many times you studied it and when.
-public abstract class StudyMaterial implements Comparable<StudyMaterial> {
+public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writable {
     private List<LocalDate> studyDates;
     private Confidence confidence;
     private String name;
@@ -86,5 +89,11 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial> {
     //effects: returns name as String
     public String toString() {
         return name;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        //TODO: Implement toJson
+        return null;
     }
 }

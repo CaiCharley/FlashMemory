@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // A flash card with a question and answer
 public class Card extends StudyMaterial {
     //invariant: name of this is the question
@@ -31,4 +33,8 @@ public class Card extends StudyMaterial {
         return getName();
     }
 
+    @Override
+    public JSONObject toJson() {
+        return super.toJson();
+    }
 }

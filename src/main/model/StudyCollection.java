@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 import java.util.*;
 
 // A Map of StudyMaterial, which itself is a StudyMaterial. Contains methods to add/edit/remove elements from Map
@@ -115,4 +117,9 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
 
     //effects: returns all the cards under in all submaterials in materialMap
     public abstract Collection<Card> getAllCards();
+
+    @Override
+    public JSONObject toJson() {
+        return super.toJson();
+    }
 }
