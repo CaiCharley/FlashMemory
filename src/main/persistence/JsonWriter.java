@@ -33,9 +33,7 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
     public void write(Semester semester) {
-        //TODO: Implement Semester Writer
-        JSONObject json = null;
-        // JSONObject json = semester.toJson();
+        JSONObject json = semester.toJson();
         saveToFile(json.toString(TAB));
     }
 

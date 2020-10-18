@@ -33,6 +33,12 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
     }
 
     //modifies: this
+    //effects: sets studyDates to dates. For use in reading and writing.
+    public void setStudyDates(List<LocalDate> dates) {
+        this.studyDates = dates;
+    }
+
+    //modifies: this
     //effects: adds today as last date studied to end of studyDates and updates confidence
     public void trackStudy(Confidence confidence) {
         this.studyDates.add(LocalDate.now());

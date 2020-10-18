@@ -20,7 +20,7 @@ public class Card extends StudyMaterial {
     }
 
     //getters and setters
-    protected void setAnswer(String answer) {
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
 

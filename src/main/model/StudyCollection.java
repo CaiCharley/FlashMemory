@@ -22,10 +22,22 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         this.materialMap = new HashMap<>();
     }
 
+    //requires: name must not be a key in material map
+    //modifies: this
+    //effects: creates M with name and adds to material map.
+    public void add(String name) {
+        add(name, Confidence.NONE);
+    }
+
+    //requires: name must not be a key in material map
+    //modifies: this
+    //effects: creates M with name and specified confidence and adds to material map.
+    public abstract void add(String name, Confidence confidence);
+
     //requires: material must not already be in map
     //modifies: this
     //effects: adds material to materialMap with name as key
-    public void add(M material) {
+    protected void add(M material) {
         materialMap.put(material.getName(), material);
     }
 

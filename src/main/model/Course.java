@@ -17,6 +17,13 @@ public class Course extends StudyCollection<Topic> {
     }
 
     @Override
+    //modifies: this
+    //effects: adds Topic with name in material map
+    public void add(String name, Confidence confidence) {
+        add(new Topic(name, confidence));
+    }
+
+    @Override
     //effects: returns total number of cards in all topics
     public int countCards() {
         int cards = 0;

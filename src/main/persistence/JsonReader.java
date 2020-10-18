@@ -1,13 +1,16 @@
 package persistence;
 
-import model.Semester;
-import model.StudyCollection;
+import model.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 // Represents a reader that reads workroom from JSON data stored in file
@@ -43,19 +46,60 @@ public class JsonReader {
 
     // EFFECTS: parses Semester from JSON object and returns it
     private Semester parseSemester(JSONObject jsonObject) {
-        //TODO: Implement parseSemester
-        return null;
+        String name = jsonObject.getString("name");
+        Semester semester = new Semester(name);
+
+        JSONArray jsonCourses = jsonObject.getJSONArray("materialMap");
+        addStudyMaterials(semester, jsonCourses);
+        return semester;
     }
 
-    // MODIFIES: sm
+
+    // MODIFIES: sc
     // EFFECTS: parses StudyMaterials from JsonObject and adds them to sc
-    private void addStudyMaterials(StudyCollection sc, JSONObject jsonObject) {
-        //TODO: Implement addStudyMaterials
+    private void addStudyMaterials(StudyCollection sc, JSONArray jsonMaterialMap) {
+        for (Object json : jsonMaterialMap) {
+            JSONObject nextJsonSM = (JSONObject) json;
+            addStudyMaterial(sc, nextJsonSM);
+        }
+    }
+
+    // MODIFIES: sc
+    // EFFECTS: parses StudyMaterial from JsonObject and adds them to sc
+    private void addStudyMaterial(StudyCollection sc, JSONObject jsonStudyMaterial) {
+        String name = jsonStudyMaterial.getString("name");
+        Confidence confidence = Confidence.valueOf(jsonStudyMaterial.getString("confidence"));
+        sc.add(name, confidence);
+        StudyMaterial newStudyMaterial = sc.get(name);
+        addStudyDates(newStudyMaterial, jsonStudyMaterial);
+
+        if (jsonStudyMaterial.has("materialMap")) {
+            // if it has materialMap, it must be also another StudyCollection
+            JSONArray jsonStudyMaterials = jsonStudyMaterial.getJSONArray("materialMap");
+            addStudyMaterials((StudyCollection) newStudyMaterial, jsonStudyMaterials);
+        } else {
+            //base case. If it doesn't have materialMap, Study Material is a card. StudyCollection is a Topic
+            String answer = jsonStudyMaterial.getString("answer");
+
+            Card newCard = (Card) newStudyMaterial;
+            newCard.setAnswer(answer);
+        }
     }
 
     // MODIFIES: sm
-    // EFFECTS: parses StudyMaterial from JsonObject and adds them to sc
-    private void addStudyMaterial(StudyCollection sc, JSONObject jsonObject) {
-        //TODO: Implement addStudyMaterial
+    // EFFECTS: parses StudyMaterial Fields from JsonObject and adds them to sm
+    private void addStudyDates(StudyMaterial sm, JSONObject jsonObject) {
+        List<LocalDate> studyDates = new ArrayList<>();
+        JSONArray jsonDates = jsonObject.getJSONArray("studyDates");
+        for (Object jsonDate : jsonDates) {
+            JSONObject nextJsonDate = (JSONObject) jsonDate;
+            int year = nextJsonDate.getInt("year");
+            int month = nextJsonDate.getInt("month");
+            int day = nextJsonDate.getInt("day");
+
+            studyDates.add(LocalDate.of(year, month, day));
+        }
+
+        sm.setStudyDates(studyDates);
     }
 }

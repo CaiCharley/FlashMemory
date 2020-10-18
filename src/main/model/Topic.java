@@ -15,6 +15,7 @@ public class Topic extends StudyCollection<Card> {
         super(name, confidence);
     }
 
+
     //requires: cardQuestion must be in materialMap
     //modifies: this
     //effects: wrapper for editName for Card
@@ -35,6 +36,13 @@ public class Topic extends StudyCollection<Card> {
     //effects: adds card with question and answer to materialMap.
     public void add(String question, String answer) {
         add(new Card(question, answer));
+    }
+
+    @Override
+    //modifies: this
+    //effects: adds card with question and blank answer to materialMap.
+    public void add(String name, Confidence confidence) {
+        add(new Card(name, "", confidence));
     }
 
     @Override
