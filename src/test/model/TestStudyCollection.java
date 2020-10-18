@@ -51,6 +51,23 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
     }
 
     @Test
+    void testRobustAdd() {
+        sc1.add("sm1");
+        sc2.add("sm1");
+        sc1.add("sm2", Confidence.LOW);
+        sc2.add("sm2", Confidence.HIGH);
+
+        assertTrue(sc1.contains("sm1"));
+        assertTrue(sc1.contains("sm2"));
+        assertTrue(sc2.contains("sm1"));
+        assertTrue(sc2.contains("sm2"));
+        assertEquals(Confidence.NONE, sc1.get("sm1").getConfidence());
+        assertEquals(Confidence.NONE, sc2.get("sm1").getConfidence());
+        assertEquals(Confidence.LOW, sc1.get("sm2").getConfidence());
+        assertEquals(Confidence.HIGH, sc2.get("sm2").getConfidence());
+    }
+
+    @Test
     void testEditName() {
         int size1 = sc1.size();
         String oldName = highPrioritySM.getName();
