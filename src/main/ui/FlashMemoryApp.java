@@ -253,54 +253,34 @@ public class FlashMemoryApp {
 
     //effects: tells user what the pointer is at
     private void getPosition() {
-        String clazz = pointer.getClass().getSimpleName();
         System.out.printf("You are looking at a %s called \"%s\" with %d thing(s) to study.\n",
-                clazz, pointer.getName(), pointer.size());
+                pointer.getClass().getSimpleName(), pointer.getName(), pointer.size());
     }
 
     //effects: if pointer is at Semester or Course, make a Course or Topic with user selected name respectively.
     //         if pointer is a Topic, makes a new card under Topic with user defined question and answer
     private void handleAddStudyMaterial() {
-        if (pointer instanceof Semester) {
-            addCourse();
-        } else if (pointer instanceof Course) {
-            addTopic();
-        } else if (pointer instanceof Topic) {
+        if (pointer instanceof Topic) {
             addCard();
+        } else {
+            addStudyMaterial();
         }
     }
 
-    //requires: pointer must be a Semester
+    //requires: pointer cannot be Topic
     //modifies: this
-    //effects: makes a Course under current Semester with user specified name
-    private void addCourse() {
-        System.out.printf("Please enter the name of your new course you want to add to \"%s\".\n",
-                pointer.getName());
+    //effects: adds the correct Study material under pointer with user specified name
+    private void addStudyMaterial() {
+        System.out.printf("Please enter the name of your new %s you want to add to \"%s\".\n",
+                pointer.subtype.getSimpleName(),pointer.getName());
         String name = makePrettyText(input.nextLine());
         if (!pointer.contains(name)) {
-            pointer.add(new Course(name));
+            pointer.add(name);
 
-            System.out.printf("A new course called \"%s\" has been added to \"%s\".\n", name,
-                    pointer.getName());
+            System.out.printf("A new %s called \"%s\" has been added to \"%s\".\n",
+                    pointer.subtype.getSimpleName(), name, pointer.getName());
         } else {
-            System.out.println("That course already exists in " + pointer);
-        }
-    }
-
-    //requires: pointer must be a Course
-    //modifies: this
-    //effects: makes a Topic under current Course with user specified name
-    private void addTopic() {
-        System.out.printf("Please enter the name of your new Topic you want to add to \"%s\".\n",
-                pointer.getName());
-        String name = makePrettyText(input.nextLine());
-        if (!pointer.contains(name)) {
-            pointer.add(new Topic(name));
-
-            System.out.printf("A new topic called \"%s\" has been added to \"%s\".\n",
-                    name, pointer.getName());
-        } else {
-            System.out.println("That Topic already exists in " + pointer);
+            System.out.printf("That %s already exists in %s\n", pointer.subtype.getSimpleName() + pointer);
         }
     }
 
@@ -315,7 +295,7 @@ public class FlashMemoryApp {
             System.out.println("Please enter the answer to your question you want on your card.");
             String answer = makePrettyText(input.nextLine());
 
-            pointer.add(new Card(name, answer));
+            ((Topic) pointer).add(name, answer);
             System.out.printf("A new card with \"%s\" and \"%s\" has been added to \"%s\".\n",
                     name, answer, pointer.getName());
         } else {
