@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 // Represents a reader that reads workroom from JSON data stored in file
-// adapted from JsonSerializationDemo
+// adapted from JsonSerializationDemo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 
 public class JsonReader {
     private String source;
@@ -58,7 +58,7 @@ public class JsonReader {
 
     // MODIFIES: sc
     // EFFECTS: parses StudyMaterials from JsonObject and adds them to sc
-    private void addStudyMaterials(StudyCollection sc, JSONArray jsonMaterialMap) {
+    private void addStudyMaterials(StudyCollection<?> sc, JSONArray jsonMaterialMap) {
         for (Object json : jsonMaterialMap) {
             JSONObject nextJsonSM = (JSONObject) json;
             addStudyMaterial(sc, nextJsonSM);
@@ -67,7 +67,7 @@ public class JsonReader {
 
     // MODIFIES: sc
     // EFFECTS: parses StudyMaterial from JsonObject and adds them to sc
-    private void addStudyMaterial(StudyCollection sc, JSONObject jsonStudyMaterial) {
+    private void addStudyMaterial(StudyCollection<?> sc, JSONObject jsonStudyMaterial) {
         String name = jsonStudyMaterial.getString("name");
         Confidence confidence = Confidence.valueOf(jsonStudyMaterial.getString("confidence"));
         sc.add(name, confidence);
@@ -77,7 +77,7 @@ public class JsonReader {
         if (jsonStudyMaterial.has("materialMap")) {
             // if it has materialMap, it must be also another StudyCollection
             JSONArray jsonStudyMaterials = jsonStudyMaterial.getJSONArray("materialMap");
-            addStudyMaterials((StudyCollection) newStudyMaterial, jsonStudyMaterials);
+            addStudyMaterials((StudyCollection<?>) newStudyMaterial, jsonStudyMaterials);
         } else {
             //base case. If it doesn't have materialMap, Study Material is a card. StudyCollection is a Topic
             String answer = jsonStudyMaterial.getString("answer");

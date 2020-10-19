@@ -13,6 +13,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
     public final Class<M> subtype;
 
     //effects: makes StudyCollection with name
+    // taken from https://stackoverflow.com/questions/3403909/get-generic-type-of-class-at-runtime
     public StudyCollection(String name) {
         super(name);
         this.materialMap = new HashMap<>();
@@ -20,6 +21,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
     }
 
     //effects: makes StudyCollection with name and confidence
+    // taken from https://stackoverflow.com/questions/3403909/get-generic-type-of-class-at-runtime
     public StudyCollection(String name, Confidence confidence) {
         super(name, confidence);
         this.materialMap = new HashMap<>();

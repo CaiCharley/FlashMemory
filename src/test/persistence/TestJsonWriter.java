@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-// some tests are adapted from JsonSerializationDemo
+// Adapted from JsonSerializationDemo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestJsonWriter {

@@ -1,8 +1,5 @@
 package persistence;
 
-// Represents a writer that writes JSON representation of workroom to file
-// adapted from JsonSerializationDemo
-
 import model.Semester;
 import org.json.JSONObject;
 
@@ -11,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 // Represents a writer that writes JSON representation of workroom to file
-// adapted from JsonSerializationDemo
+// adapted from JsonSerializationDemo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 
 public class JsonWriter {
     private static final int TAB = 4;

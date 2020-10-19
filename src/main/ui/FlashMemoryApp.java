@@ -56,6 +56,7 @@ public class FlashMemoryApp {
         commands.put(QUIT_CMD, this::quit);
     }
 
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     public static void main(String[] args) {
         FlashMemoryApp app = new FlashMemoryApp();
 
@@ -69,6 +70,7 @@ public class FlashMemoryApp {
     //effects: makes new FlashMemoryApp by starting input, runApp and makes commandMap. Asks user for what their new
     //         semester is called. Loads from JSON if semester already exists, otherwise make new semester.
     //         Instantiates pointer and breadcrumb and sets pointer to new semester.
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     public FlashMemoryApp() {
         input = new Scanner(System.in);
         runApp = true;
@@ -94,7 +96,7 @@ public class FlashMemoryApp {
     }
 
     //effects: lists available commands and acts as main program loop for each user input
-    //accreditation: modified from FitLifeGymKiosk
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     private void run() {
         System.out.println("What would you like to do?");
         printCommands();
@@ -362,6 +364,7 @@ public class FlashMemoryApp {
     }
 
     //effects: prints out help menu with commands
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     private void printCommands() {
         System.out.printf("Enter \"%s\" to list things to study.\n", LIST_POSITION_CMD);
         System.out.printf("Enter \"%s\" to see what you are currently looking at.\n", GET_POSITION_CMD);
@@ -388,7 +391,7 @@ public class FlashMemoryApp {
     }
 
     //effects: removes white space and quotation marks around s
-    //accreditation: modified from FitLifeGymKiosk
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     private String makePrettyText(String s) {
         s = s.trim();
         s = s.replaceAll("\"|\'", "");
@@ -396,14 +399,14 @@ public class FlashMemoryApp {
     }
 
     //effects: stops receiving user input
-    //accreditation: FitLifeGymKiosk
+    // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     public void end() {
         System.out.println("Quitting...");
         input.close();
     }
 
     //effects: saves semester to file
-    //adapted from JsonSerializationDemo
+    // adapted from JsonSerializationDemo @ https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
     private void saveSemester() {
         String filePath = JSON_DIRECTORY + semester.getName() + ".json";
         JsonWriter writer = new JsonWriter(filePath);
