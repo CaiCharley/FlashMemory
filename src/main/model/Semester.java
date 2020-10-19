@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 // A semester containing multiple Courses. Extends StudyCollection
+// invariant: studydate can only have length 1, the creation date
 public class Semester extends StudyCollection<Course> {
 
     //effects: make new semester with name and map of Course

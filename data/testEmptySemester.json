@@ -1,0 +1,10 @@
+{
+    "studyDates": [{
+        "month": 1,
+        "year": 2020,
+        "day": 1
+    }],
+    "confidence": "NONE",
+    "name": "UBC2020W1",
+    "materialMap": []
+}

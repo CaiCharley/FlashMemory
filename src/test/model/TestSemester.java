@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class TestSemester extends TestStudyCollection<Course> {
+public class TestSemester extends TestStudyCollection<Course> {
     Semester s1;
     Semester s2;
 
@@ -21,7 +21,7 @@ class TestSemester extends TestStudyCollection<Course> {
     // cards with varying confidence
     public static Map<String, Course> makeTestCourses(int numCourses, int numTopics, int numCards, int daysAgo) {
         Map<String, Course> courses = new HashMap<>();
-        for (int i = 0; i < numTopics; i++) {
+        for (int i = 0; i < numCourses; i++) {
             String topicName = "course" + i;
             Confidence[] confidenceList = new Confidence[]{
                     Confidence.LOW,
@@ -34,7 +34,7 @@ class TestSemester extends TestStudyCollection<Course> {
             topic.trackStudy(confidenceList[i % 6]);
             courses.put(topicName, topic);
 
-            topic.addAll(TestCourse.makeTestTopics(numCourses, numCards, daysAgo).values());
+            topic.addAll(TestCourse.makeTestTopics(numTopics, numCards, daysAgo).values());
         }
         return courses;
     }

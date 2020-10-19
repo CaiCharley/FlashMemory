@@ -48,6 +48,7 @@ public class JsonReader {
     private Semester parseSemester(JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         Semester semester = new Semester(name);
+        addStudyDates(semester, jsonObject);
 
         JSONArray jsonCourses = jsonObject.getJSONArray("materialMap");
         addStudyMaterials(semester, jsonCourses);

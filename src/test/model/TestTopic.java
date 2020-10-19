@@ -20,19 +20,18 @@ public class TestTopic extends TestStudyCollection<Card> {
         Map<String, Card> cards = new HashMap<>();
         for (int i = 0; i < num; i++) {
             Card c = new Card("q" + i, "a" + i);
-            c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.NONE);
             switch (i % 4) {
                 case 0:
-                    c.trackStudy(Confidence.NONE);
+                    c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.NONE);
                     break;
                 case 1:
-                    c.trackStudy(Confidence.LOW);
+                    c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.LOW);
                     break;
                 case 2:
-                    c.trackStudy(Confidence.MEDIUM);
+                    c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.MEDIUM);
                     break;
                 case 3:
-                    c.trackStudy(Confidence.HIGH);
+                    c.trackStudy(LocalDate.now().minusDays(daysAgo), Confidence.HIGH);
                     break;
             }
             cards.put(c.getName(), c);

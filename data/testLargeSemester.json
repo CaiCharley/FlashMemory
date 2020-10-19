@@ -1,0 +1,563 @@
+{
+    "studyDates": [{
+        "month": 1,
+        "year": 2020,
+        "day": 1
+    }],
+    "confidence": "NONE",
+    "name": "UBC",
+    "materialMap": [
+        {
+            "studyDates": [
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                },
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                }
+            ],
+            "confidence": "LOW",
+            "name": "course0",
+            "materialMap": [
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "LOW",
+                    "name": "t0",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                },
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "MEDIUM",
+                    "name": "t1",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                },
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "LOW",
+                    "name": "t2",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "studyDates": [
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                },
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                }
+            ],
+            "confidence": "MEDIUM",
+            "name": "course1",
+            "materialMap": [
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "LOW",
+                    "name": "t0",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                },
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "MEDIUM",
+                    "name": "t1",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                },
+                {
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "confidence": "LOW",
+                    "name": "t2",
+                    "materialMap": [
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a1",
+                            "confidence": "LOW",
+                            "name": "q1"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a2",
+                            "confidence": "MEDIUM",
+                            "name": "q2"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a3",
+                            "confidence": "HIGH",
+                            "name": "q3"
+                        },
+                        {
+                            "studyDates": [
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 18
+                                },
+                                {
+                                    "month": 10,
+                                    "year": 2020,
+                                    "day": 17
+                                }
+                            ],
+                            "answer": "a0",
+                            "confidence": "NONE",
+                            "name": "q0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

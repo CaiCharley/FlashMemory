@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestCourse extends TestStudyCollection<Topic> {
+public class TestCourse extends TestStudyCollection<Topic> {
     Course c1;
     Course c2;
 
