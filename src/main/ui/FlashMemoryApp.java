@@ -20,11 +20,11 @@ public class FlashMemoryApp {
 
     private static Map<String, Runnable> commands;
 
-    private Scanner input;
-    private Semester semester;
+    private final Scanner input;
+    private final Semester semester;
     private boolean runApp;
-    private StudyCollection pointer;
-    private Stack<StudyCollection> breadcrumb;
+    private StudyCollection<?> pointer;
+    private final Stack<StudyCollection<?>> breadcrumb;
 
     //modifies: this
     //effects: fills commands with command:function entries
@@ -195,7 +195,7 @@ public class FlashMemoryApp {
                     break;
                 }
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.printf("");
             }
             System.out.println(c.getAnswer());
             System.out.println("Your previous confidence was " + c.getConfidence());
@@ -243,7 +243,7 @@ public class FlashMemoryApp {
                 System.out.printf("Question:\n%s\nAnswer:\n%s\n", question, answer);
             } else {
                 breadcrumb.push(pointer);
-                pointer = (StudyCollection) pointer.get(name);
+                pointer = (StudyCollection<?>) pointer.get(name);
                 getPosition();
             }
         } else {
@@ -272,7 +272,7 @@ public class FlashMemoryApp {
     //effects: adds the correct Study material under pointer with user specified name
     private void addStudyMaterial() {
         System.out.printf("Please enter the name of your new %s you want to add to \"%s\".\n",
-                pointer.subtype.getSimpleName(),pointer.getName());
+                pointer.subtype.getSimpleName(), pointer.getName());
         String name = makePrettyText(input.nextLine());
         if (!pointer.contains(name)) {
             pointer.add(name);
@@ -280,7 +280,7 @@ public class FlashMemoryApp {
             System.out.printf("A new %s called \"%s\" has been added to \"%s\".\n",
                     pointer.subtype.getSimpleName(), name, pointer.getName());
         } else {
-            System.out.printf("That %s already exists in %s\n", pointer.subtype.getSimpleName() + pointer);
+            System.out.printf("That %s already exists in %s\n", pointer.subtype.getSimpleName(), pointer);
         }
     }
 

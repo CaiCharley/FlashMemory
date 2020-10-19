@@ -132,7 +132,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
     //effects: returns number of cards in all sub-materials in materialMap
     public abstract int countCards();
 
-    //effects: returns all the cards under in all submaterials in materialMap
+    //effects: returns all the cards under in all sub-materials in materialMap
     public abstract Collection<Card> getAllCards();
 
     @Override

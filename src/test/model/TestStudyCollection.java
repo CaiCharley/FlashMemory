@@ -1,8 +1,5 @@
 package model;
 
-import model.Confidence;
-import model.StudyCollection;
-import model.StudyMaterial;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
