@@ -1,10 +1,20 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class FlashMemoryApp {
+
+    private static final String JSON_DIRECTORY = "./data/";
+
+    private static final String LOAD_CMD = "load";
+    private static final String SAVE_CMD = "save";
+
 
     private static final String LIST_POSITION_CMD = "ls";
     private static final String GET_POSITION_CMD = ".";
@@ -21,7 +31,7 @@ public class FlashMemoryApp {
     private static Map<String, Runnable> commands;
 
     private final Scanner input;
-    private final Semester semester;
+    private Semester semester;
     private boolean runApp;
     private StudyCollection<?> pointer;
     private final Stack<StudyCollection<?>> breadcrumb;
@@ -41,6 +51,8 @@ public class FlashMemoryApp {
         commands.put(STUDY_CMD, this::study);
         commands.put(TEST_CMD, this::test);
         commands.put(HELP_CMD, this::printCommands);
+        commands.put(SAVE_CMD, this::saveSemester);
+        commands.put(LOAD_CMD, this::loadSemester);
         commands.put(QUIT_CMD, this::quit);
     }
 
@@ -55,18 +67,30 @@ public class FlashMemoryApp {
 
     //modifies: this
     //effects: makes new FlashMemoryApp by starting input, runApp and makes commandMap. Asks user for what their new
-    //         semester is called. Instantiates pointer and breadcrumb and sets pointer to new semester.
+    //         semester is called. Loads from JSON if semester already exists, otherwise make new semester.
+    //         Instantiates pointer and breadcrumb and sets pointer to new semester.
     public FlashMemoryApp() {
         input = new Scanner(System.in);
         runApp = true;
         makeCommandMap();
 
-        System.out.println("Please enter the name of your semester.");
+        System.out.println("Please enter name of Semester you want to load. "
+                + "If it doesn't exist, a new Semester will be made.");
         String str = makePrettyText(input.nextLine());
-        semester = new Semester(str);
-        breadcrumb = new Stack<>();
-        pointer = semester;
-        System.out.printf("Your new semester called \"%s\" has been created.\n\n", str);
+
+        String filepath = JSON_DIRECTORY + str + ".json";
+        JsonReader reader = new JsonReader(filepath);
+
+        try {
+            semester = reader.read();
+            System.out.printf("Your semester called \"%s\" has been loaded.\n\n", str);
+        } catch (IOException e) {
+            semester = new Semester(str);
+            System.out.printf("A new semester called \"%s\" has been created.\n\n", str);
+        } finally {
+            pointer = semester;
+            breadcrumb = new Stack<>();
+        }
     }
 
     //effects: lists available commands and acts as main program loop for each user input
@@ -204,8 +228,9 @@ public class FlashMemoryApp {
     }
 
     //modifies: this
-    //effects: set runApp to false
+    //effects: set runApp to false and saves semester to file
     private void quit() {
+        saveSemester();
         runApp = false;
     }
 
@@ -346,7 +371,9 @@ public class FlashMemoryApp {
         System.out.printf("Enter \"%s\" to remove an element from you are looking at.\n", REMOVE_CMD);
         System.out.printf("Enter \"%s\" to edit the name of an element.\n", EDIT_CMD);
         System.out.printf("Enter \"%s\" to record that you studied something.\n", STUDY_CMD);
-        System.out.printf("Enter \"%s\" to test yourself on all the cards in what you are looking at.\n", STUDY_CMD);
+        System.out.printf("Enter \"%s\" to test yourself on all the cards in what you are looking at.\n", TEST_CMD);
+        System.out.printf("Enter \"%s\" to load semester from file.\n", LOAD_CMD);
+        System.out.printf("Enter \"%s\" to save semester to file.\n", SAVE_CMD);
         System.out.printf("Enter \"%s\" to see commands.\n", HELP_CMD);
         System.out.printf("Enter \"%s\" to quit.\n", QUIT_CMD);
     }
@@ -373,5 +400,39 @@ public class FlashMemoryApp {
     public void end() {
         System.out.println("Quitting...");
         input.close();
+    }
+
+    //effects: saves semester to file
+    //adapted from JsonSerializationDemo
+    private void saveSemester() {
+        String filePath = JSON_DIRECTORY + semester.getName() + ".json";
+        JsonWriter writer = new JsonWriter(filePath);
+        try {
+            writer.open();
+            writer.write(semester);
+            writer.close();
+            System.out.println("Saved " + semester.getName() + " to " + filePath);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + filePath);
+        }
+    }
+
+    //modifies: this
+    //effects: loads semester from file
+    private void loadSemester() {
+        System.out.println("Please enter name of Semester you want to load.");
+        String str = makePrettyText(input.nextLine());
+
+        String filepath = JSON_DIRECTORY + str + ".json";
+        JsonReader reader = new JsonReader(filepath);
+
+        try {
+            semester = reader.read();
+            pointer = semester;
+            breadcrumb.clear();
+            System.out.printf("Your semester called \"%s\" has been loaded.\n\n", str);
+        } catch (IOException e) {
+            System.out.printf("The semester %s does not exist. Please try again.", str);
+        }
     }
 }

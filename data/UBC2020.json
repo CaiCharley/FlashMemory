@@ -1,0 +1,68 @@
+{
+    "studyDates": [{
+        "month": 10,
+        "year": 2020,
+        "day": 18
+    }],
+    "confidence": "NONE",
+    "name": "UBC2020",
+    "materialMap": [
+        {
+            "studyDates": [
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                },
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                },
+                {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                }
+            ],
+            "confidence": "HIGH",
+            "name": "MICB 302",
+            "materialMap": [{
+                "studyDates": [{
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                }],
+                "confidence": "NONE",
+                "name": "TCRs",
+                "materialMap": [{
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "answer": "2",
+                    "confidence": "HIGH",
+                    "name": "How many chains?"
+                }]
+            }]
+        },
+        {
+            "studyDates": [{
+                "month": 10,
+                "year": 2020,
+                "day": 18
+            }],
+            "confidence": "NONE",
+            "name": "CPSC 210",
+            "materialMap": []
+        }
+    ]
+}

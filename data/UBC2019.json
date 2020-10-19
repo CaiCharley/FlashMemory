@@ -1,0 +1,63 @@
+{
+    "studyDates": [{
+        "month": 10,
+        "year": 2020,
+        "day": 18
+    }],
+    "confidence": "NONE",
+    "name": "UBC2019",
+    "materialMap": [{
+        "studyDates": [{
+            "month": 10,
+            "year": 2020,
+            "day": 18
+        }],
+        "confidence": "NONE",
+        "name": "CPSC 121",
+        "materialMap": [
+            {
+                "studyDates": [{
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                }],
+                "confidence": "NONE",
+                "name": "gates",
+                "materialMap": []
+            },
+            {
+                "studyDates": [
+                    {
+                        "month": 10,
+                        "year": 2020,
+                        "day": 18
+                    },
+                    {
+                        "month": 10,
+                        "year": 2020,
+                        "day": 18
+                    }
+                ],
+                "confidence": "MEDIUM",
+                "name": "logic",
+                "materialMap": [{
+                    "studyDates": [
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        },
+                        {
+                            "month": 10,
+                            "year": 2020,
+                            "day": 18
+                        }
+                    ],
+                    "answer": "False",
+                    "confidence": "MEDIUM",
+                    "name": "What is not True?"
+                }]
+            }
+        ]
+    }]
+}
