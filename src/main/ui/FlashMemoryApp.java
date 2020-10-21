@@ -231,9 +231,21 @@ public class FlashMemoryApp {
     }
 
     //modifies: this
-    //effects: set runApp to false and saves semester to file
+    //effects: set runApp to false and asks user if they want to save
     private void quit() {
-        saveSemester();
+        System.out.println("Do you want to save your Semester? (yes/no)");
+        while (true) {
+            String str = makePrettyCommand(input.nextLine());
+            if (str.equals("yes")) {
+                saveSemester();
+                break;
+            } else if (str.equals("no")) {
+                System.out.println("Discarding unsaved changes...");
+                break;
+            } else {
+                System.out.println("Invalid input. Do you want to save your Semester? (yes/no)");
+            }
+        }
         runApp = false;
     }
 
