@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+// Runner class for FlashMemoryApp. Loops for user input and invokes commands that act on a semester.
 public class FlashMemoryApp {
 
     private static final String JSON_DIRECTORY = "./data/";

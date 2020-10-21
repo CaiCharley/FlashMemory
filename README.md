@@ -10,13 +10,15 @@ The idea is further explained in by Ali Abdall in his [YouTube Video](https://ww
 
 ### User Stories
 Phase 1
-- As a user, I want to add topics to study in different classes
+- As a user, I want to add and remove topics to study in different classes
 - As a user, I want have flash cards for each topic
-- As a user, I want to record how confident I feel with each topic / flash card
+- As a user, I want to record how confident I feel with each topic/flash card
 - As a user, I want to know when I last studied a topic
-- As a user, I want to know what topics / flash cards there are in a subject / topic
-- As a user, I want view what things I should study next
+- As a user, I want to know what topics/flash cards there are in a subject/topic in the order they should be studied
+- As a user, I want be able to edit the names of topics/classes/cards
+- As a user, I want to be able to test myself on all the card within a topic/class
 
 Phase 2
-- As a user, I want to be able to save my Semester to a file and be prompted to before quitting
-- As a user, i want to be able to load my Semester from a file
+- As a user, I want to be able to save my Semester to a file and be prompted before quitting
+- As a user, I want to be able to either make a new Semester or load different Semesters from a file
+- As a user, I want my semester to be saved automatically if i quit the program
