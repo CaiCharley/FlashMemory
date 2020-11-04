@@ -21,4 +21,4 @@ Phase 1
 Phase 2
 - As a user, I want to be able to save my Semester to a file and be prompted before quitting
 - As a user, I want to be able to either make a new Semester or load different Semesters from a file
-- As a user, I want my semester to be saved automatically if i quit the program
+- As a user, I want my semester to be prompted to save if I quit the program

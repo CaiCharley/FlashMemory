@@ -52,17 +52,70 @@
                     "confidence": "HIGH",
                     "name": "How many chains?"
                 }]
-            }]
+            }
+            ]
         },
-        {
-            "studyDates": [{
-                "month": 10,
+      {
+        "studyDates": [
+          {
+            "month": 10,
+            "year": 2020,
+            "day": 18
+          }
+        ],
+        "confidence": "NONE",
+        "name": "CPSC 210",
+        "materialMap": [
+          {
+            "studyDates": [
+              {
+                "month": 11,
                 "year": 2020,
-                "day": 18
-            }],
+                "day": 4
+              }
+            ],
             "confidence": "NONE",
-            "name": "CPSC 210",
-            "materialMap": []
-        }
+            "name": "phase3",
+            "materialMap": [
+              {
+                "studyDates": [
+                  {
+                    "month": 11,
+                    "year": 2020,
+                    "day": 4
+                  }
+                ],
+                "answer": "a1",
+                "confidence": "NONE",
+                "name": "q1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "studyDates": [
+          {
+            "month": 11,
+            "year": 2020,
+            "day": 4
+          }
+        ],
+        "confidence": "NONE",
+        "name": "c1",
+        "materialMap": []
+      },
+      {
+        "studyDates": [
+          {
+            "month": 11,
+            "year": 2020,
+            "day": 4
+          }
+        ],
+        "confidence": "NONE",
+        "name": "c2",
+        "materialMap": []
+      }
     ]
 }
