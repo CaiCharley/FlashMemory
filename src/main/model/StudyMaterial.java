@@ -7,6 +7,7 @@ import persistence.Writable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -122,5 +123,24 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
         }
 
         return jsonArray;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StudyMaterial that = (StudyMaterial) o;
+        return studyDates.equals(that.studyDates)
+                && confidence == that.confidence
+                && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studyDates, confidence, name);
     }
 }

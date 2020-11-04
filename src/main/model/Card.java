@@ -2,6 +2,8 @@ package model;
 
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 // A flash card with a question and answer
 public class Card extends StudyMaterial {
     //invariant: name of this is the question
@@ -39,5 +41,25 @@ public class Card extends StudyMaterial {
         JSONObject json = super.toJson();
         json.put("answer", answer);
         return json;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        Card card = (Card) o;
+        return answer.equals(card.answer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), answer);
     }
 }
