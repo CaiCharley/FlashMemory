@@ -6,48 +6,49 @@ import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Stack;
+import java.util.List;
 
+
+// A JFrame GUI interface for FlashMemory
 public class FlashMemoryGUI extends JFrame {
     // Application Fields
     private static final String JSON_DIRECTORY = "./data/";
     private static final String APP_NAME = "Flash Memory";
 
     private Semester semester;
-    private StudyCollection<?> pointer;
-    private Stack<StudyCollection<?>> breadcrumb;
 
     // JFrame Fields
-    private JButton changeSemesterButton;
-    private JLabel semesterNameLabel;
     private JPanel mainPanel;
+    private JButton changeSemesterButton;
     private JButton saveSemesterButton;
+    private JLabel semesterNameLabel;
+    private JTree semesterTree;
 
-    //effects: makes new FlashMemoryGUI and initializes application fields.
+    //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
+    // Quits if user doesn't load a semester
     public FlashMemoryGUI(String title) {
         super(title);
 
-        initializeSemester();
+        setSemester();
         if (semester == null) {
             System.exit(0);
         }
-        pointer = semester;
-        breadcrumb = new Stack<>();
-
-        initializeJFrame();
+        setupJFrame();
     }
 
     //modifies: this
-    //effects: initializes JFrame fields and configuration from form
-    private void initializeJFrame() {
-        changeSemesterButton.addActionListener(e -> initializeSemester());
-        saveSemesterButton.addActionListener(e -> saveSemester());
+    //effects: initializes JFrame fields and configuration from form. Implements behaviour to prompt saving before quit
+    private void setupJFrame() {
+        setupButtons();
+        setupJTree();
 
         add(mainPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -62,7 +63,47 @@ public class FlashMemoryGUI extends JFrame {
         setVisible(true);
     }
 
-    //effects: prompts user to save semester before exiting application
+    //modifies: this
+    //effects: updates semesterTree and configures variables
+    private void setupJTree() {
+        updateJTree();
+        semesterTree.setRootVisible(false);
+        semesterTree.setShowsRootHandles(false);
+    }
+
+    //modifies: this
+    //effects: updates the root node of semesterTree to reflect hierarchy in semester.
+    private void updateJTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(semester);
+        addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
+        DefaultTreeModel model = new DefaultTreeModel(root);
+        semesterTree.setModel(model);
+    }
+
+    //modifies: node
+    //effects: adds studyMaterials in materials as child nodes of node.
+    // calls recursively to add items within each material if material is a StudyCollection
+    private void addStudyMaterialsToTreeNode(List<?> materials, DefaultMutableTreeNode node) {
+        for (Object sm : materials) {
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(sm);
+            if (sm instanceof StudyCollection<?>) {
+                StudyCollection<?> sc = (StudyCollection<?>) sm;
+                addStudyMaterialsToTreeNode(sc.getSortedByPriority(), newNode);
+            }
+            node.add(newNode);
+        }
+
+    }
+
+    //modifies: this
+    //effects: initializes buttons in JFrame with actionListeners and other parameters
+    private void setupButtons() {
+        changeSemesterButton.addActionListener(e -> setSemester());
+        saveSemesterButton.addActionListener(e -> saveSemester());
+    }
+
+    //modifies: this
+    //effects: prompts user to save semester before exiting application. Does nothing if cancelled
     private void terminate() {
         Object[] options = {"Save", "Don't Save", "Cancel"};
         int n = JOptionPane.showOptionDialog(this,
@@ -108,11 +149,11 @@ public class FlashMemoryGUI extends JFrame {
 
     //effects: asks user if they want to load semester from file or make new semester.
     // adapted from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#button
-    private void initializeSemester() {
-        Object[] options = {"New Semester", "Load Semester"};
+    private void setSemester() {
+        Object[] options = {"Create Semester", "Load Semester"};
         int n = JOptionPane.showOptionDialog(this,
-                "Would you like to make a new semester or load an existing semester?",
-                "Initialize Semester",
+                "Would you like to create a new semester or load an existing semester?",
+                "Set Semester",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
@@ -123,6 +164,12 @@ public class FlashMemoryGUI extends JFrame {
             makeNewSemester();
         } else if (n == 1) {
             loadSemester();
+        }
+
+        if (semester != null) {
+            setTitle(APP_NAME + " | " + semester.getName());
+            updateJTree();
+            semesterNameLabel.setText(semester.getName());
         }
     }
 
@@ -140,7 +187,6 @@ public class FlashMemoryGUI extends JFrame {
                 "My Semester");
         if (semesterName != null) {
             semester = new Semester(makePrettyText(semesterName));
-            setTitle(APP_NAME + " | " + semester.getName());
         }
     }
 
@@ -161,7 +207,6 @@ public class FlashMemoryGUI extends JFrame {
             JsonReader reader = new JsonReader(filepath);
             try {
                 semester = reader.read();
-                setTitle(APP_NAME + " | " + semester.getName());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Unable to load semester:\n" + filepath);
             }
@@ -172,7 +217,7 @@ public class FlashMemoryGUI extends JFrame {
     // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     private String makePrettyText(String s) {
         s = s.trim();
-        s = s.replaceAll("\"|\'", "");
+        s = s.replaceAll("\"|'", "");
         return s;
     }
 
