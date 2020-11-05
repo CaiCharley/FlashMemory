@@ -13,24 +13,28 @@ import java.util.Stack;
 public class FlashMemoryGUI extends JFrame {
     // Application Fields
     private static final String JSON_DIRECTORY = "./data/";
+    private static final String APP_NAME = "Flash Memory";
 
     private Semester semester;
     private StudyCollection<?> pointer;
     private Stack<StudyCollection<?>> breadcrumb;
 
     // JFrame Fields
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 500;
-    private JButton loadSemesterBtn;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 800;
+    private JButton changeSemesterButton;
     private JLabel semesterNameLabel;
-    private JTextField dfTextField;
     private JPanel mainPanel;
+    private JButton button1;
 
     //effects: makes new FlashMemoryGUI and initializes application fields.
     public FlashMemoryGUI(String title) {
         super(title);
 
         initializeSemester();
+        if (semester == null) {
+            System.exit(0);
+        }
         pointer = semester;
         breadcrumb = new Stack<>();
 
@@ -40,11 +44,11 @@ public class FlashMemoryGUI extends JFrame {
     //modifies: this
     //effects: initializes JFrame fields and configuration from form
     private void initializeJFrame() {
-        loadSemesterBtn.addActionListener(e -> loadSemester());
+        changeSemesterButton.addActionListener(e -> initializeSemester());
 
         add(mainPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(new Dimension(WIDTH, HEIGHT));
+        pack();
         centreOnScreen();
         setVisible(true);
     }
@@ -72,7 +76,7 @@ public class FlashMemoryGUI extends JFrame {
 
         if (n == 0) {
             makeNewSemester();
-        } else {
+        } else if (n == 1) {
             loadSemester();
         }
     }
@@ -82,15 +86,17 @@ public class FlashMemoryGUI extends JFrame {
     //adapted from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#button
     private void makeNewSemester() {
         String semesterName = (String) JOptionPane.showInputDialog(
-                null,
+                this,
                 "Enter a name for your new Semester",
                 "Create Semester",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
                 "My Semester");
-        semester = new Semester(semesterName);
-        semesterNameLabel.setText(semester.getName());
+        if (semesterName != null) {
+            semester = new Semester(semesterName);
+            setTitle(APP_NAME + " | " + semester.getName());
+        }
     }
 
     //modifies: this
@@ -110,7 +116,7 @@ public class FlashMemoryGUI extends JFrame {
             JsonReader reader = new JsonReader(filepath);
             try {
                 semester = reader.read();
-                semesterNameLabel.setText(semester.getName());
+                setTitle(APP_NAME + " | " + semester.getName());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Unable to load semester:\n" + filepath);
             }
@@ -124,6 +130,6 @@ public class FlashMemoryGUI extends JFrame {
             System.out.println("Unable to set LookAndFeel");
         }
 
-        SwingUtilities.invokeLater(() -> new FlashMemoryGUI("Flash Memory"));
+        SwingUtilities.invokeLater(() -> new FlashMemoryGUI(APP_NAME));
     }
 }
