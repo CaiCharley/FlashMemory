@@ -9,8 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestSemester extends TestStudyCollection<Course> {
@@ -79,10 +78,12 @@ public class TestSemester extends TestStudyCollection<Course> {
         assertEquals(120, s1.countCards());
         assertEquals(72, s2.countCards());
 
-        s1.get("course1").get("t1").add("new q", "new a");
-        s1.get("course1").get("t2").add("new q", "new a");
-        s1.get("course2").get("t1").add("new q", "new a");
-        s1.get("course3").get("t1").add("new q", "new a");
+        assertDoesNotThrow(() -> {
+            s1.get("course1").get("t1").add("new q", "new a");
+            s1.get("course1").get("t2").add("new q", "new a");
+            s1.get("course2").get("t1").add("new q", "new a");
+            s1.get("course3").get("t1").add("new q", "new a");
+        });
 
         assertEquals(124, s1.countCards());
     }

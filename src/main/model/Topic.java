@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.DuplicateElementException;
+
 import java.util.Collection;
 
 // a topic containing many cards in a map that you can study
@@ -15,14 +17,6 @@ public class Topic extends StudyCollection<Card> {
         super(name, confidence);
     }
 
-
-    //requires: cardQuestion must be in materialMap
-    //modifies: this
-    //effects: wrapper for editName for Card
-    public Card editCardQuestion(String cardQuestion, String newQuestion) {
-        return editName(cardQuestion, newQuestion);
-    }
-
     //requires: cardQuestion must be in materialMap
     //modifies: this
     //effects: changes a card's answer with cardQuestion to newAnswer in materialMap
@@ -33,15 +27,17 @@ public class Topic extends StudyCollection<Card> {
     }
 
     //modifies: this
-    //effects: adds card with question and answer to materialMap.
-    public void add(String question, String answer) {
+    //effects: adds Card with question and answer to materialMap.
+    // Throws DuplicateElementException if card with question already in this
+    public void add(String question, String answer) throws DuplicateElementException {
         add(new Card(question, answer));
     }
 
     @Override
     //modifies: this
     //effects: adds card with question and blank answer to materialMap.
-    public Card add(String name, Confidence confidence) {
+    // Throws DuplicateElementException if card with question already in this
+    public Card add(String name, Confidence confidence) throws DuplicateElementException {
         Card card = new Card(name, "", confidence);
         add(card);
         return card;

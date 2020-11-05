@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.DuplicateElementException;
+import exceptions.NoElementException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -20,8 +22,11 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
     void testCollectionManipulate() {
         int size1 = sc1.size();
 
-        sc1.add(highPrioritySM);
-        sc1.add(lowPrioritySM);
+        // add unique elements
+        assertDoesNotThrow(() -> {
+            sc1.add(highPrioritySM);
+            sc1.add(lowPrioritySM);
+        });
         map1.put(highPrioritySM.getName(), highPrioritySM);
         map1.put(lowPrioritySM.getName(), lowPrioritySM);
 
@@ -32,14 +37,16 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         assertTrue(sc1.contains(lowPrioritySM.getName()));
         assertEquals(size1 + 2, sc1.size());
 
-        sc1.remove(lowPrioritySM.getName());
+        // remove existing element by name
+        assertDoesNotThrow(() -> sc1.remove(lowPrioritySM.getName()));
         map1.remove(lowPrioritySM.getName());
 
         assertEquals(map1, sc1.getAll());
         assertFalse(sc1.contains(lowPrioritySM));
         assertEquals(size1 + 1, sc1.size());
 
-        sc1.remove(highPrioritySM);
+        // remove existing element by element
+        assertDoesNotThrow(() -> sc1.remove(highPrioritySM));
         map1.remove(highPrioritySM.getName());
 
         assertEquals(map1, sc1.getAll());
@@ -48,11 +55,34 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
     }
 
     @Test
+    void testCollectionManipulateExceptions() {
+        // remove non-existing elements
+        assertThrows(NoElementException.class, () -> sc1.remove(highPrioritySM));
+        assertThrows(NoElementException.class, () -> sc1.remove(lowPrioritySM.getName()));
+
+        // add unique elements
+        assertDoesNotThrow(() -> {
+            sc1.add(highPrioritySM);
+            sc1.add(lowPrioritySM);
+        });
+
+        // add duplicate elements
+        assertThrows(DuplicateElementException.class, () -> sc1.add(highPrioritySM));
+        assertThrows(DuplicateElementException.class, () -> sc1.add(highPrioritySM.getName()));
+        assertThrows(DuplicateElementException.class, () -> sc1.add(lowPrioritySM));
+        assertThrows(DuplicateElementException.class, () -> sc1.add(lowPrioritySM.getName()));
+
+
+    }
+
+    @Test
     void testRobustAdd() {
-        sc1.add("sm1");
-        sc2.add("sm1");
-        sc1.add("sm2", Confidence.LOW);
-        sc2.add("sm2", Confidence.HIGH);
+        assertDoesNotThrow(() -> {
+            sc1.add("sm1");
+            sc2.add("sm1");
+            sc1.add("sm2", Confidence.LOW);
+            sc2.add("sm2", Confidence.HIGH);
+        });
 
         assertTrue(sc1.contains("sm1"));
         assertTrue(sc1.contains("sm2"));
@@ -68,19 +98,20 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
     void testEditName() {
         int size1 = sc1.size();
         String oldName = highPrioritySM.getName();
-        sc1.add(highPrioritySM);
+        assertDoesNotThrow(() -> sc1.add(highPrioritySM));
 
-        assertEquals(highPrioritySM, sc1.editName(highPrioritySM.getName(), "high edit"));
+        assertDoesNotThrow(() -> assertEquals(highPrioritySM, sc1.editName(highPrioritySM.getName(), "high edit")));
         assertTrue(sc1.contains(highPrioritySM));
         assertTrue(sc1.contains("high edit"));
         assertFalse(sc1.contains(oldName));
         assertEquals(size1 + 1, sc1.size());
 
-        assertEquals(highPrioritySM, sc1.editName(highPrioritySM.getName(), "high edit2"));
+        assertDoesNotThrow(() -> assertEquals(highPrioritySM, sc1.editName(highPrioritySM.getName(), "high edit2")));
         assertTrue(sc1.contains(highPrioritySM));
         assertTrue(sc1.contains("high edit2"));
         assertFalse(sc1.contains("high edit"));
         assertEquals(size1 + 1, sc1.size());
+
     }
 
     @Test
@@ -112,7 +143,7 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
 
         lowPrioritySM.trackStudy(Confidence.HIGH);
         high.put(lowPrioritySM.getName(), lowPrioritySM);
-        sc1.add(lowPrioritySM);
+        assertDoesNotThrow(() -> sc1.add(lowPrioritySM));
 
         assertEquals(high, sc1.getAtConfidence(Confidence.HIGH));
     }
@@ -148,7 +179,7 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         belowLow.put(highPrioritySM.getName(), highPrioritySM);
         belowMed.put(highPrioritySM.getName(), highPrioritySM);
         belowHigh.put(highPrioritySM.getName(), highPrioritySM);
-        sc1.add(highPrioritySM);
+        assertDoesNotThrow(() -> sc1.add(highPrioritySM));
 
         assertEquals(belowLow, sc1.getBelowConfidence(Confidence.LOW));
         assertEquals(belowMed, sc1.getBelowConfidence(Confidence.MEDIUM));
@@ -171,10 +202,12 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         sorted2.add(0, highPrioritySM);
         sorted2.add(lowPrioritySM);
 
-        sc1.add(highPrioritySM);
-        sc1.add(lowPrioritySM);
-        sc2.add(highPrioritySM);
-        sc2.add(lowPrioritySM);
+        assertDoesNotThrow(() -> {
+            sc1.add(highPrioritySM);
+            sc1.add(lowPrioritySM);
+            sc2.add(highPrioritySM);
+            sc2.add(lowPrioritySM);
+        });
 
         assertEquals(sorted1, sc1.getSortedByPriority());
         assertEquals(sorted2, sc2.getSortedByPriority());

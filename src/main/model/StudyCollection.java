@@ -1,5 +1,8 @@
 package model;
 
+import exceptions.DuplicateElementException;
+import exceptions.ModifyException;
+import exceptions.NoElementException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,37 +31,52 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
         subtype = (Class<M>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
-    //requires: name must not be a key in material map
     //modifies: this
     //effects: creates M with name and adds to material map, returns newly added material.
-    public M add(String name) {
+    // Throws DuplicateElementException if name is already in KeySet
+    public M add(String name) throws DuplicateElementException {
         return add(name, Confidence.NONE);
     }
 
-    //requires: name must not be a key in material map
     //modifies: this
     //effects: creates M with name and specified confidence and adds to material map, returns newly added material.
-    public abstract M add(String name, Confidence confidence);
+    // Throws DuplicateElementException if name is already in KeySet
+    public abstract M add(String name, Confidence confidence) throws DuplicateElementException;
 
-    //requires: material must not already be in map
     //modifies: this
     //effects: adds material to materialMap with name as key
-    protected void add(M material) {
+    protected void add(M material) throws DuplicateElementException {
+        if (materialMap.containsKey(material.getName())) {
+            throw new DuplicateElementException(this, material.getName());
+        }
         materialMap.put(material.getName(), material);
     }
 
     //modifies: this
-    //effects: add materials to materialMap
+    //effects: add unique materials to materialMap
     public void addAll(Collection<M> materials) {
         for (M m : materials) {
-            add(m);
+            try {
+                add(m);
+            } catch (DuplicateElementException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    //requires: name must be in materialMap's keys and new name must not already exist
     //modifies: this
-    //effects: edits material's name in materialMap and updates key of material. returns edited material
-    public M editName(String name, String newName) {
+    //effects: edits material's name in materialMap and updates key of material. returns edited material.
+    // Throws DuplicateElementException if newName already exists
+    // Throws NoElementException if name to be modifies does not exist
+    public M editName(String name, String newName) throws ModifyException {
+        if (materialMap.containsKey(newName)) {
+            throw new DuplicateElementException(this, newName);
+        }
+
+        if (!materialMap.containsKey(name)) {
+            throw new NoElementException(this, name);
+        }
+
         M editedMaterial = materialMap.remove(name);
         editedMaterial.setName(newName);
         materialMap.put(newName, editedMaterial);
@@ -67,13 +85,18 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
 
     //modifies: this
     //effects: removes material with name from materialMap. returns null if material not in materialMap
-    public M remove(String name) {
+    // Throws NoElementException if material to be removed is not in this
+    public M remove(String name) throws NoElementException {
+        if (!materialMap.containsKey(name)) {
+            throw new NoElementException(this, name);
+        }
         return materialMap.remove(name);
     }
 
     //modifies: this
     //effects: removes material from materialMap. Returns material removed, null if not in materialMap
-    public M remove(M material) {
+    // Throws NoElementException if material to be removed is not in this
+    public M remove(M material) throws NoElementException {
         return remove(material.getName());
     }
 

@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,23 +79,26 @@ public class TestCourse extends TestStudyCollection<Topic> {
         assertEquals(18, c2.countCards());
 
         Topic t = new Topic("new topic");
-        t.add("new q", "new a");
-
-        c1.add(t);
-        c2.add(t);
+        assertDoesNotThrow(() -> {
+            t.add("new q", "new a");
+            c1.add(t);
+            c2.add(t);
+        });
 
         assertTrue(c1.contains(t));
         assertTrue(c2.contains(t));
         assertEquals(31, c1.countCards());
         assertEquals(19, c2.countCards());
 
-        t.add("new q2", "new a 2");
+        assertDoesNotThrow(() -> t.add("new q2", "new a 2"));
 
         assertEquals(32, c1.countCards());
         assertEquals(20, c2.countCards());
 
-        c1.remove("t1");
-        c2.remove("t1");
+        assertDoesNotThrow(() -> {
+            c1.remove("t1");
+            c2.remove("t1");
+        });
 
         assertFalse(c1.contains("t1"));
         assertFalse(c2.contains("t1"));

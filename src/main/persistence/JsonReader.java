@@ -1,5 +1,6 @@
 package persistence;
 
+import exceptions.DuplicateElementException;
 import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class JsonReader {
         StringBuilder contentBuilder = new StringBuilder();
 
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s));
+            stream.forEach(contentBuilder::append);
         }
 
         return contentBuilder.toString();
@@ -70,7 +71,11 @@ public class JsonReader {
     private void addStudyMaterial(StudyCollection<?> sc, JSONObject jsonStudyMaterial) {
         String name = jsonStudyMaterial.getString("name");
         Confidence confidence = Confidence.valueOf(jsonStudyMaterial.getString("confidence"));
-        sc.add(name, confidence);
+        try {
+            sc.add(name, confidence);
+        } catch (DuplicateElementException e) {
+            System.out.println(e.getMessage());
+        }
         StudyMaterial newStudyMaterial = sc.get(name);
         addStudyDates(newStudyMaterial, jsonStudyMaterial);
 

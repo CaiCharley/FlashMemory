@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.DuplicateElementException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,7 +21,8 @@ public class Course extends StudyCollection<Topic> {
     @Override
     //modifies: this
     //effects: adds Topic with name in material map
-    public Topic add(String name, Confidence confidence) {
+    // Throws DuplicateElementException if Topic already in this
+    public Topic add(String name, Confidence confidence) throws DuplicateElementException {
         Topic topic = new Topic(name, confidence);
         add(topic);
         return topic;

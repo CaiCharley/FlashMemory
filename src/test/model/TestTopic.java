@@ -8,8 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestTopic extends TestStudyCollection<Card> {
     Topic t1;
@@ -75,17 +74,6 @@ public class TestTopic extends TestStudyCollection<Card> {
     }
 
     @Test
-    void testEditCardQuestion() {
-        assertEquals(map1.get("q1"), t1.editCardQuestion("q1", "q1edited"));
-        assertEquals(map1.get("q5"), t1.editCardQuestion("q5", "q5edited"));
-
-        assertEquals("q1edited", t1.get("q1edited").getQuestion());
-        assertEquals("q5edited", t1.get("q5edited").getQuestion());
-        assertEquals("q7", t1.get("q7").getQuestion());
-        assertEquals(10, t1.countCards());
-    }
-
-    @Test
     void testEditCardAnswer() {
         assertEquals(map2.get("q0"), t2.editCardAnswer("q0", "a0edited"));
         assertEquals(map2.get("q3"), t2.editCardAnswer("q3", "a3edited"));
@@ -98,13 +86,13 @@ public class TestTopic extends TestStudyCollection<Card> {
 
     @Test
     void testAddCard() {
-        t2.add("q add", "a add");
+        assertDoesNotThrow(() -> t2.add("q add", "a add"));
         assertEquals("q add", t2.get("q add").getQuestion());
         assertEquals("a add", t2.get("q add").getAnswer());
         assertEquals(Confidence.NONE, t2.get("q add").getConfidence());
         assertEquals(5, t2.countCards());
 
-        t2.add("q add2", "a add2");
+        assertDoesNotThrow(() -> t2.add("q add2", "a add2"));
         assertEquals("q add2", t2.get("q add2").getQuestion());
         assertEquals("a add2", t2.get("q add2").getAnswer());
         assertEquals(Confidence.NONE, t2.get("q add2").getConfidence());

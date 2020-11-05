@@ -1,5 +1,8 @@
 package ui;
 
+import exceptions.DuplicateElementException;
+import exceptions.ModifyException;
+import exceptions.NoElementException;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -129,20 +132,15 @@ public class FlashMemoryApp {
             System.out.println("Enter the name of the thing you would like to change.");
             String oldName = makePrettyText(input.nextLine());
 
-            if (pointer.contains(oldName)) {
-                System.out.println("Enter the new name you would like to set");
-                String newName = makePrettyText(input.nextLine());
+            System.out.println("Enter the new name you would like to set");
+            String newName = makePrettyText(input.nextLine());
 
-                if (!pointer.contains(newName)) {
-                    pointer.editName(oldName, newName);
-                    System.out.printf("Changed the name from %s to %s\n", oldName, newName);
-                } else {
-                    System.out.println("That name already exists. Try again");
-                }
-            } else {
-                System.out.println(pointer + " does not contain " + oldName + ". Try again");
+            try {
+                pointer.editName(oldName, newName);
+                System.out.printf("Changed the name from %s to %s\n", oldName, newName);
+            } catch (ModifyException e) {
+                System.out.println(e.getMessage());
             }
-
         } else {
             System.out.println("There is nothing to edit under " + pointer);
         }
@@ -154,12 +152,12 @@ public class FlashMemoryApp {
             System.out.println("What would you like to document studying?");
             String material = makePrettyText(input.nextLine());
 
-            if (pointer.contains(material)) {
-                parseStudyConfidence(pointer.get(material));
+            StudyMaterial sm = pointer.get(material);
+            if (sm != null) {
+                parseStudyConfidence(sm);
             } else {
                 System.out.println(pointer + " does not contain " + material + ". Try again");
             }
-
         } else {
             System.out.println("There is nothing to study under " + pointer);
         }
@@ -222,7 +220,7 @@ public class FlashMemoryApp {
                     break;
                 }
             } catch (Exception e) {
-                System.out.printf("");
+                System.out.printf(e.getMessage());
             }
             System.out.println(c.getAnswer());
             System.out.println("Your previous confidence was " + c.getConfidence());
@@ -314,13 +312,13 @@ public class FlashMemoryApp {
         System.out.printf("Please enter the name of your new %s you want to add to \"%s\".\n",
                 pointer.subtype.getSimpleName(), pointer.getName());
         String name = makePrettyText(input.nextLine());
-        if (!pointer.contains(name)) {
-            pointer.add(name);
 
+        try {
+            pointer.add(name);
             System.out.printf("A new %s called \"%s\" has been added to \"%s\".\n",
                     pointer.subtype.getSimpleName(), name, pointer.getName());
-        } else {
-            System.out.printf("That %s already exists in %s\n", pointer.subtype.getSimpleName(), pointer);
+        } catch (DuplicateElementException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -330,18 +328,16 @@ public class FlashMemoryApp {
     private void addCard() {
         System.out.println("Please enter the question you want on your card.");
         String name = makePrettyText(input.nextLine());
+        System.out.println("Please enter the answer to your question you want on your card.");
+        String answer = makePrettyText(input.nextLine());
 
-        if (!pointer.contains(name)) {
-            System.out.println("Please enter the answer to your question you want on your card.");
-            String answer = makePrettyText(input.nextLine());
-
+        try {
             ((Topic) pointer).add(name, answer);
             System.out.printf("A new card with \"%s\" and \"%s\" has been added to \"%s\".\n",
                     name, answer, pointer.getName());
-        } else {
-            System.out.println("A card already exists with that question");
+        } catch (DuplicateElementException e) {
+            System.out.println(e.getMessage());
         }
-
     }
 
     //modifies: this
@@ -352,12 +348,14 @@ public class FlashMemoryApp {
         if (pointer.size() > 0) {
             System.out.println("What would you like to remove from " + pointer);
             material = makePrettyText(input.nextLine());
-            if (pointer.contains(material)) {
+
+            try {
                 pointer.remove(material);
                 System.out.println(material + " has been removed");
-            } else {
-                System.out.println(pointer + " does not contain " + material);
+            } catch (NoElementException e) {
+                System.out.println(e.getMessage());
             }
+
         } else {
             System.out.println("There is nothing to remove from " + pointer);
         }
@@ -399,7 +397,7 @@ public class FlashMemoryApp {
     private String makePrettyCommand(String s) {
         s = s.toLowerCase();
         s = s.trim();
-        s = s.replaceAll("\"|\'", "");
+        s = s.replaceAll("\"|'", "");
         return s;
     }
 
@@ -407,7 +405,7 @@ public class FlashMemoryApp {
     // adapted from FitLifeGymKiosk @ https://github.com/UBCx-Software-Construction/long-form-problem-starters.git
     private String makePrettyText(String s) {
         s = s.trim();
-        s = s.replaceAll("\"|\'", "");
+        s = s.replaceAll("\"|'", "");
         return s;
     }
 

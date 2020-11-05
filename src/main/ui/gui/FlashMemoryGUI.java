@@ -1,5 +1,6 @@
 package ui.gui;
 
+import exceptions.DuplicateElementException;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -75,7 +76,7 @@ public class FlashMemoryGUI extends JFrame {
     //modifies: this
     //effects: updates semesterTree and configures variables
     private void setupJTree() {
-        updateJTree();
+        changeJTree();
         semesterTree.addTreeSelectionListener(e -> {
             currentNode = (DefaultMutableTreeNode) semesterTree.getLastSelectedPathComponent();
             if (currentNode != null) {
@@ -85,6 +86,29 @@ public class FlashMemoryGUI extends JFrame {
             }
             refreshPointer();
         });
+    }
+
+    //modifies: this
+    //effects: updates the model of semesterTree to reflect a new loaded hierarchy in semester.
+    private void changeJTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(semester);
+        addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
+        semesterModel = new DefaultTreeModel(root);
+        semesterTree.setModel(semesterModel);
+    }
+
+    //modifies: node
+    //effects: adds studyMaterials in materials as child nodes of node.
+    // calls recursively to add items within each material if material is a StudyCollection
+    private void addStudyMaterialsToTreeNode(List<?> materials, DefaultMutableTreeNode node) {
+        for (Object sm : materials) {
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(sm);
+            if (sm instanceof StudyCollection<?>) {
+                StudyCollection<?> sc = (StudyCollection<?>) sm;
+                addStudyMaterialsToTreeNode(sc.getSortedByPriority(), newNode);
+            }
+            node.add(newNode);
+        }
     }
 
     //modifies: this
@@ -124,29 +148,6 @@ public class FlashMemoryGUI extends JFrame {
         }
     }
 
-    //modifies: this
-    //effects: updates the root node of semesterTree to reflect hierarchy in semester.
-    private void updateJTree() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(semester);
-        addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
-        DefaultTreeModel model = new DefaultTreeModel(root);
-        semesterTree.setModel(model);
-    }
-
-    //modifies: node
-    //effects: adds studyMaterials in materials as child nodes of node.
-    // calls recursively to add items within each material if material is a StudyCollection
-    private void addStudyMaterialsToTreeNode(List<?> materials, DefaultMutableTreeNode node) {
-        for (Object sm : materials) {
-            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(sm);
-            if (sm instanceof StudyCollection<?>) {
-                StudyCollection<?> sc = (StudyCollection<?>) sm;
-                addStudyMaterialsToTreeNode(sc.getSortedByPriority(), newNode);
-            }
-            node.add(newNode);
-        }
-
-    }
 
     //modifies: this
     //effects: initializes buttons in JFrame with actionListeners and other parameters
@@ -161,13 +162,11 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     private void addStudyMaterial() {
-        StudyCollection<?> sc = (StudyCollection) pointer;
+        StudyCollection<?> sc = (StudyCollection<?>) pointer;
         String submaterial = sc.subtype.getSimpleName();
-        String message;
+        String message = "Enter a name for your new " + submaterial;
         if (sc instanceof Topic) {
             message = "Enter a question for your new " + submaterial;
-        } else {
-            message = "Enter a name for your new " + submaterial;
         }
 
         String name = (String) JOptionPane.showInputDialog(
@@ -179,8 +178,14 @@ public class FlashMemoryGUI extends JFrame {
                 null,
                 "New " + submaterial);
         if (name != null) {
-            sc.add(makePrettyText(name));
-            updateJTree();
+            try {
+                StudyMaterial newMaterial = sc.add(makePrettyText(name));
+                DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newMaterial);
+                currentNode.insert(newNode, 0);
+                semesterModel.reload();
+            } catch (DuplicateElementException e) {
+                JOptionPane.showMessageDialog(this, e);
+            }
         }
     }
 
@@ -262,8 +267,8 @@ public class FlashMemoryGUI extends JFrame {
 
         if (semester != null) {
             setTitle(APP_NAME + " | " + semester.getName());
-            updateJTree();
             semesterNameLabel.setText(semester.getName());
+            changeJTree();
         }
     }
 
