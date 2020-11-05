@@ -15,8 +15,10 @@ public class Semester extends StudyCollection<Course> {
     @Override
     //modifies: this
     //effects: adds card with question and answer to materialMap.
-    public void add(String name, Confidence confidence) {
-        add(new Course(name, confidence));
+    public Course add(String name, Confidence confidence) {
+        Course course = new Course(name, confidence);
+        add(course);
+        return course;
     }
 
     @Override

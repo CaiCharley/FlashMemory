@@ -19,8 +19,10 @@ public class Course extends StudyCollection<Topic> {
     @Override
     //modifies: this
     //effects: adds Topic with name in material map
-    public void add(String name, Confidence confidence) {
-        add(new Topic(name, confidence));
+    public Topic add(String name, Confidence confidence) {
+        Topic topic = new Topic(name, confidence);
+        add(topic);
+        return topic;
     }
 
     @Override

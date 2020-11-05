@@ -41,8 +41,10 @@ public class Topic extends StudyCollection<Card> {
     @Override
     //modifies: this
     //effects: adds card with question and blank answer to materialMap.
-    public void add(String name, Confidence confidence) {
-        add(new Card(name, "", confidence));
+    public Card add(String name, Confidence confidence) {
+        Card card = new Card(name, "", confidence);
+        add(card);
+        return card;
     }
 
     @Override

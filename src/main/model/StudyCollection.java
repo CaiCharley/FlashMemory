@@ -30,15 +30,15 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
 
     //requires: name must not be a key in material map
     //modifies: this
-    //effects: creates M with name and adds to material map.
-    public void add(String name) {
-        add(name, Confidence.NONE);
+    //effects: creates M with name and adds to material map, returns newly added material.
+    public M add(String name) {
+        return add(name, Confidence.NONE);
     }
 
     //requires: name must not be a key in material map
     //modifies: this
-    //effects: creates M with name and specified confidence and adds to material map.
-    public abstract void add(String name, Confidence confidence);
+    //effects: creates M with name and specified confidence and adds to material map, returns newly added material.
+    public abstract M add(String name, Confidence confidence);
 
     //requires: material must not already be in map
     //modifies: this
