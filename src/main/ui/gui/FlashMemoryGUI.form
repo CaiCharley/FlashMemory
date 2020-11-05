@@ -11,24 +11,45 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="7c6cf" class="javax.swing.JLabel" binding="semesterNameLabel">
+      <component id="70455" class="javax.swing.JTree" binding="semesterTree" default-binding="true">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="418" height="16"/>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="50"/>
           </grid>
         </constraints>
         <properties>
-          <text value="Semester Name"/>
+          <alignmentX value="0.5"/>
+          <rootVisible value="false"/>
+          <showsRootHandles value="false"/>
         </properties>
       </component>
       <component id="d560c" class="javax.swing.JButton" binding="changeSemesterButton">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <label value="Create/Load Semester"/>
           <text value="Create/Load Semester"/>
         </properties>
+      </component>
+      <component id="7c6cf" class="javax.swing.JLabel" binding="semesterNameLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="326" height="16"/>
+          </grid>
+        </constraints>
+        <properties>
+          <font name="Segoe UI" size="16"/>
+          <text value="Semester Name"/>
+        </properties>
+      </component>
+      <component id="826f2" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
       </component>
       <component id="5aa68" class="javax.swing.JButton" binding="saveSemesterButton">
         <constraints>
@@ -38,14 +59,13 @@
           <text value="Save Semester"/>
         </properties>
       </component>
-      <component id="70455" class="javax.swing.JTree" binding="semesterTree" default-binding="true">
+      <component id="cf1ae" class="javax.swing.JLabel" binding="pointerLabel">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="200" height="50"/>
-          </grid>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <alignmentX value="0.5"/>
+          <font name="Segoe UI" size="16"/>
+          <text value=""/>
         </properties>
       </component>
     </children>

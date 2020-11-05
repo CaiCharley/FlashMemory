@@ -31,6 +31,8 @@ public class FlashMemoryGUI extends JFrame {
     private JButton saveSemesterButton;
     private JLabel semesterNameLabel;
     private JTree semesterTree;
+    private JTextArea textArea1;
+    private JLabel pointerLabel;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -48,7 +50,7 @@ public class FlashMemoryGUI extends JFrame {
     //effects: initializes JFrame fields and configuration from form. Implements behaviour to prompt saving before quit
     private void setupJFrame() {
         setupButtons();
-        setupJTree();
+        updateJTree();
 
         add(mainPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -61,14 +63,6 @@ public class FlashMemoryGUI extends JFrame {
         pack();
         centreOnScreen();
         setVisible(true);
-    }
-
-    //modifies: this
-    //effects: updates semesterTree and configures variables
-    private void setupJTree() {
-        updateJTree();
-        semesterTree.setRootVisible(false);
-        semesterTree.setShowsRootHandles(false);
     }
 
     //modifies: this
