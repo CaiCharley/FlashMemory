@@ -51,4 +51,9 @@ public abstract class TestStudyMaterial {
         assertEquals(0, sm1.getDaysSinceStudied());
         assertEquals(Confidence.HIGH, sm1.getConfidence());
     }
+
+    @Test
+    void testEquals() {
+        //TODO: test equals and hashcode
+    }
 }

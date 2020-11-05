@@ -180,6 +180,9 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         assertEquals(sorted2, sc2.getSortedByPriority());
     }
 
-
+    @Test
+    void testEquals() {
+        //TODO: test equals and hashcode
+    }
 }
 

@@ -1,7 +1,6 @@
 package ui.gui;
 
-import model.Semester;
-import model.StudyCollection;
+import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -24,15 +23,22 @@ public class FlashMemoryGUI extends JFrame {
     private static final String APP_NAME = "Flash Memory";
 
     private Semester semester;
+    private StudyMaterial pointer;
+    private DefaultMutableTreeNode currentNode;
+    private DefaultTreeModel semesterModel;
 
     // JFrame Fields
     private JPanel mainPanel;
     private JButton changeSemesterButton;
     private JButton saveSemesterButton;
+    private JButton addButton;
+    private JButton removeButton;
+    private JButton editNameButton;
+    private JButton studyButton;
     private JLabel semesterNameLabel;
-    private JTree semesterTree;
-    private JTextArea textArea1;
     private JLabel pointerLabel;
+    private JTextArea textArea1;
+    private JTree semesterTree;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -44,13 +50,14 @@ public class FlashMemoryGUI extends JFrame {
             System.exit(0);
         }
         setupJFrame();
+
     }
 
     //modifies: this
     //effects: initializes JFrame fields and configuration from form. Implements behaviour to prompt saving before quit
     private void setupJFrame() {
         setupButtons();
-        updateJTree();
+        setupJTree();
 
         add(mainPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -63,6 +70,58 @@ public class FlashMemoryGUI extends JFrame {
         pack();
         centreOnScreen();
         setVisible(true);
+    }
+
+    //modifies: this
+    //effects: updates semesterTree and configures variables
+    private void setupJTree() {
+        updateJTree();
+        semesterTree.addTreeSelectionListener(e -> {
+            currentNode = (DefaultMutableTreeNode) semesterTree.getLastSelectedPathComponent();
+            if (currentNode != null) {
+                pointer = (StudyMaterial) currentNode.getUserObject();
+            } else {
+                pointer = null;
+            }
+            refreshPointer();
+        });
+    }
+
+    //modifies: this
+    //effects: updates fields in this to match new pointer
+    private void refreshPointer() {
+        if (pointer != null) {
+            pointerLabel.setText(pointer.getName());
+        } else {
+            pointerLabel.setText(null);
+        }
+        toggleEditButtonEnable();
+    }
+
+    //modifies: this
+    //effects: enables/disables buttons depending on pointer
+    private void toggleEditButtonEnable() {
+        if (pointer instanceof Card) {
+            addButton.setEnabled(false);
+            editNameButton.setText("Edit Question");
+        } else if (pointer instanceof Semester) {
+            addButton.setEnabled(true);
+            removeButton.setEnabled(false);
+            editNameButton.setEnabled(true);
+            studyButton.setEnabled(true);
+            editNameButton.setText("Edit Name");
+        } else if (pointer != null) {
+            addButton.setEnabled(true);
+            removeButton.setEnabled(true);
+            editNameButton.setEnabled(true);
+            studyButton.setEnabled(true);
+            editNameButton.setText("Edit Name");
+        } else {
+            addButton.setEnabled(false);
+            removeButton.setEnabled(false);
+            editNameButton.setEnabled(false);
+            studyButton.setEnabled(false);
+        }
     }
 
     //modifies: this
@@ -94,7 +153,48 @@ public class FlashMemoryGUI extends JFrame {
     private void setupButtons() {
         changeSemesterButton.addActionListener(e -> setSemester());
         saveSemesterButton.addActionListener(e -> saveSemester());
+
+        addButton.addActionListener(e -> addStudyMaterial());
+        removeButton.addActionListener(e -> removeStudyMaterial());
+        editNameButton.addActionListener(e -> editStudyMaterial());
+        studyButton.addActionListener(e -> studyStudyMaterial());
     }
+
+    private void addStudyMaterial() {
+        StudyCollection<?> sc = (StudyCollection) pointer;
+        String submaterial = sc.subtype.getSimpleName();
+        String message;
+        if (sc instanceof Topic) {
+            message = "Enter a question for your new " + submaterial;
+        } else {
+            message = "Enter a name for your new " + submaterial;
+        }
+
+        String name = (String) JOptionPane.showInputDialog(
+                this,
+                message,
+                "Create " + submaterial,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "New " + submaterial);
+        if (name != null) {
+            sc.add(makePrettyText(name));
+            updateJTree();
+        }
+    }
+
+    private void removeStudyMaterial() {
+    }
+
+    private void studyStudyMaterial() {
+
+    }
+
+    private void editStudyMaterial() {
+
+    }
+
 
     //modifies: this
     //effects: prompts user to save semester before exiting application. Does nothing if cancelled
