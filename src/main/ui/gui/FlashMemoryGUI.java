@@ -24,8 +24,6 @@ public class FlashMemoryGUI extends JFrame {
     private Stack<StudyCollection<?>> breadcrumb;
 
     // JFrame Fields
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 800;
     private JButton changeSemesterButton;
     private JLabel semesterNameLabel;
     private JPanel mainPanel;
@@ -52,7 +50,9 @@ public class FlashMemoryGUI extends JFrame {
         saveSemesterButton.addActionListener(e -> saveSemester());
 
         add(mainPanel);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 terminate();
             }
@@ -62,12 +62,13 @@ public class FlashMemoryGUI extends JFrame {
         setVisible(true);
     }
 
+    //effects: prompts user to save semester before exiting application
     private void terminate() {
-        Object[] options = {"Save", "Don't Save"};
+        Object[] options = {"Save", "Don't Save", "Cancel"};
         int n = JOptionPane.showOptionDialog(this,
                 "Would you like to save any changes before quitting?",
                 "Save Changes",
-                JOptionPane.YES_NO_OPTION,
+                JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
@@ -75,8 +76,10 @@ public class FlashMemoryGUI extends JFrame {
 
         if (n == 0) {
             saveSemester();
+        } else if (n == 2) {
+            return;
         }
-
+        dispose();
         System.exit(0);
     }
 
