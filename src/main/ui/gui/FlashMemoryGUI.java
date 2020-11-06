@@ -33,6 +33,13 @@ public class FlashMemoryGUI extends JFrame {
 
     // JFrame Fields
     private JPanel mainPanel;
+    private JScrollPane studyDatePane;
+    private JScrollPane semesterTreePane;
+    private JPanel pointerTextPane;
+    private JPanel modifyButtonPane;
+    private JPanel semesterPane;
+    private JPanel pointerPane;
+
     private JButton changeSemesterButton;
     private JButton saveSemesterButton;
     private JButton addButton;
@@ -60,15 +67,13 @@ public class FlashMemoryGUI extends JFrame {
             System.exit(0);
         }
         setupJFrame();
-
     }
 
     //modifies: this
     //effects: initializes JFrame fields and configuration from form. Implements behaviour to prompt saving before quit
     private void setupJFrame() {
-        setupButtons();
-        setupJTree();
-        refreshPointer();
+        setupButtonListeners();
+        setupJTreeListeners();
 
         add(mainPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -84,23 +89,34 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
+    //effects: initializes buttons in JFrame with actionListeners and other parameters
+    private void setupButtonListeners() {
+        changeSemesterButton.addActionListener(e -> setSemester());
+        saveSemesterButton.addActionListener(e -> saveSemester());
+
+        addButton.addActionListener(e -> addStudyMaterial());
+        removeButton.addActionListener(e -> removeStudyMaterial());
+        editNameButton.addActionListener(e -> editStudyMaterial());
+        studyButton.addActionListener(e -> studyStudyMaterial());
+    }
+
+    //modifies: this
     //effects: updates semesterTree and configures variables
-    private void setupJTree() {
-        changeJTree();
+    private void setupJTreeListeners() {
         semesterTree.addTreeSelectionListener(e -> {
             currentNode = (StudyMaterialNode) semesterTree.getLastSelectedPathComponent();
-
-            refreshPointer();
+            currentNodeChanged();
         });
     }
 
     //modifies: this
     //effects: updates the model of semesterTree to reflect a new loaded hierarchy in semester.
-    private void changeJTree() {
+    private void semesterChanged() {
         StudyMaterialNode root = new StudyMaterialNode(semester);
         addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
         semesterModel = new DefaultTreeModel(root);
         semesterTree.setModel(semesterModel);
+        currentNodeChanged();
     }
 
     //modifies: node
@@ -118,78 +134,68 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: updates fields in this to match new pointer
-    private void refreshPointer() {
+    //effects: updates fields in this to match new curNode
+    private void currentNodeChanged() {
         if (currentNode != null) {
             pointer = (StudyMaterial) currentNode.getUserObject();
+            updatePointerPane();
+            pointerPane.setVisible(true);
         } else {
             pointer = null;
-        }
-
-        if (pointer != null) {
-            if (pointer instanceof StudyCollection<?>) {
-                cardCountLabel.setText("Contained Cards: " + ((StudyCollection<?>) pointer).countCards());
-            } else {
-                cardCountLabel.setText(null);
-            }
-            pointerLabel.setText(pointer.getName());
-            confidenceLabel.setText("Confidence: " + pointer.getConfidence());
-            daysSinceStudyLabel.setText(String.format("Days Since Studied: %d", pointer.getDaysSinceStudied()));
-            timesStudiedLabel.setText(String.format("Times Studied: %d", pointer.getTimesStudied()));
-            dateList.setListData(pointer.getStudyDates().toArray(new LocalDate[0]));
-            studyDateLabel.setVisible(true);
-        } else {
-            pointerNull();
+            pointerPane.setVisible(false);
         }
         toggleEditButtonEnable();
     }
 
     //modifies: this
-    //effects: clears JComponents if pointer is null
-    private void pointerNull() {
-        pointerLabel.setText(null);
-        confidenceLabel.setText(null);
-        daysSinceStudyLabel.setText(null);
-        timesStudiedLabel.setText(null);
-        cardCountLabel.setText(null);
-        studyDateLabel.setVisible(false);
-        dateList.setListData(new String[0]);
+    //effects: updates fields in pointerPane to reflect a new pointer
+    private void updatePointerPane() {
+        // provides the contained cards field if pointer is a study collection
+        if (pointer instanceof StudyCollection<?>) {
+            cardCountLabel.setVisible(true);
+            cardCountLabel.setText("Contained Cards: " + ((StudyCollection<?>) pointer).countCards());
+        } else {
+            cardCountLabel.setVisible(false);
+        }
+
+        pointerLabel.setText(pointer.getName());
+        confidenceLabel.setText("Confidence: " + pointer.getConfidence());
+        daysSinceStudyLabel.setText(String.format("Days Since Studied: %d", pointer.getDaysSinceStudied()));
+        timesStudiedLabel.setText(String.format("Times Studied: %d", pointer.getTimesStudied()));
+        dateList.setListData(pointer.getStudyDates().toArray(new LocalDate[0]));
     }
 
     //modifies: this
     //effects: enables/disables buttons depending on pointer
     private void toggleEditButtonEnable() {
         if (pointer instanceof Card) {
-            setButtonsEnable(false, true, true, true, "Edit Question");
+            setButtons(false, true, true, true, "Edit Question", "Add");
         } else if (pointer instanceof Semester) {
-            setButtonsEnable(true, false, true, true, "Edit Name");
-        } else if (pointer != null) {
-            setButtonsEnable(true, true, true, true, "Edit Name");
+            setButtons(true, false, true, true,
+                    "Edit Name", "Add " + ((StudyCollection<?>) pointer).subtype.getSimpleName());
+        } else if (pointer instanceof StudyCollection<?>) {
+            setButtons(true, true, true, true,
+                    "Edit Name", "Add " + ((StudyCollection<?>) pointer).subtype.getSimpleName());
         } else {
-            setButtonsEnable(false, false, false, false, "Edit Name");
+            setButtons(false, false, false, false,
+                    "Edit Name", "Add");
         }
     }
 
     //modifies: this
     //effects: sets buttons to modify semester
-    private void setButtonsEnable(boolean add, boolean remove, boolean edit, boolean study, String editLabel) {
+    private void setButtons(boolean add,
+                            boolean remove,
+                            boolean edit,
+                            boolean study,
+                            String editLabel,
+                            String addLabel) {
         addButton.setEnabled(add);
         removeButton.setEnabled(remove);
         editNameButton.setEnabled(edit);
         studyButton.setEnabled(study);
         editNameButton.setText(editLabel);
-    }
-
-    //modifies: this
-    //effects: initializes buttons in JFrame with actionListeners and other parameters
-    private void setupButtons() {
-        changeSemesterButton.addActionListener(e -> setSemester());
-        saveSemesterButton.addActionListener(e -> saveSemester());
-
-        addButton.addActionListener(e -> addStudyMaterial());
-        removeButton.addActionListener(e -> removeStudyMaterial());
-        editNameButton.addActionListener(e -> editStudyMaterial());
-        studyButton.addActionListener(e -> studyStudyMaterial());
+        addButton.setText(addLabel);
     }
 
     //modifies: this
@@ -233,7 +239,7 @@ public class FlashMemoryGUI extends JFrame {
                 StudyCollection<?> parentSC = (StudyCollection<?>) parent.getUserObject();
                 parentSC.remove(pointer.getName());
                 semesterModel.removeNodeFromParent(currentNode);
-                refreshPointer();
+                currentNodeChanged();
             } catch (NoElementException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
@@ -268,7 +274,7 @@ public class FlashMemoryGUI extends JFrame {
             StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();
             parent.sort();
             semesterModel.reload(parent);
-            refreshPointer();
+            currentNodeChanged();
         }
     }
 
@@ -293,7 +299,7 @@ public class FlashMemoryGUI extends JFrame {
                 }
             }
             semesterModel.nodeChanged(currentNode);
-            refreshPointer();
+            currentNodeChanged();
         }
     }
 
@@ -334,14 +340,6 @@ public class FlashMemoryGUI extends JFrame {
         }
     }
 
-    //modifies: this
-    //effects:  frame is centred on desktop
-    //adapted from SnakeGame
-    private void centreOnScreen() {
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((screen.width - getWidth()) / 2, (screen.height - getHeight()) / 2);
-    }
-
     //effects: asks user if they want to load semester from file or make new semester.
     // adapted from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#button
     private void setSemester() {
@@ -364,7 +362,7 @@ public class FlashMemoryGUI extends JFrame {
         if (semester != null) {
             setTitle(APP_NAME + " | " + semester.getName());
             semesterNameLabel.setText(semester.getName());
-            changeJTree();
+            semesterChanged();
         }
     }
 
@@ -424,6 +422,14 @@ public class FlashMemoryGUI extends JFrame {
         s = s.trim();
         s = s.replaceAll("\"|'", "");
         return s;
+    }
+
+    //modifies: this
+    //effects:  frame is centred on desktop
+    //adapted from SnakeGame
+    private void centreOnScreen() {
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation((screen.width - getWidth()) / 2, (screen.height - getHeight()) / 2);
     }
 
     public static void main(String[] args) {
