@@ -27,7 +27,7 @@ Phase 3
 - As a user, I want to see the hierarchy within each semester and have them sorted in order of priority
 - As a user, I want to be able to add/remove/edit different study materials to study collections
 - As a user, I want to be able to select a study material in the semester and view its details
-- As a user, I want to be able to test myself on the flash cards within a study collection and update my confidence
 - As a user, I want to be able to load different semesters and create new semesters
 - As a user, I want to be able to save my semester and be prompted to save before quitting
+- As a user, I want to be able to test myself on the flash cards within a study collection and update my confidence
 - As a user, I want a visual representation of how I am doing for a study collection (pie chart of confidence)

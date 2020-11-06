@@ -39,16 +39,16 @@ public class FlashMemoryGUI extends JFrame {
     private JButton removeButton;
     private JButton editNameButton;
     private JButton studyButton;
+    private JButton testButton;
     private JLabel semesterNameLabel;
     private JLabel pointerLabel;
     private JLabel confidenceLabel;
-    private JTree semesterTree;
-    private JList dateList;
     private JLabel studyDateLabel;
-    private JButton testButton;
     private JLabel cardCountLabel;
     private JLabel daysSinceStudyLabel;
     private JLabel timesStudiedLabel;
+    private JTree semesterTree;
+    private JList dateList;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -210,7 +210,7 @@ public class FlashMemoryGUI extends JFrame {
         String name = getStringPopup(message, "Create " + subMaterial, "New " + subMaterial);
         if (name != null) {
             try {
-                StudyMaterial newMaterial = sc.add(makePrettyText(name));
+                StudyMaterial newMaterial = sc.add(name);
                 StudyMaterialNode newNode = new StudyMaterialNode(newMaterial);
                 currentNode.add(newNode);
                 semesterModel.reload(currentNode);
@@ -245,13 +245,11 @@ public class FlashMemoryGUI extends JFrame {
         int selection = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to remove " + pointer, "Confirmation",
                 JOptionPane.YES_NO_OPTION);
-        if (selection == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return selection == 0;
     }
 
+    //modifies: this
+    //effects: asks user for confidence and records studying for pointer
     private void studyStudyMaterial() {
         String[] options = {"None", "Low", "Medium", "High", "Cancel"};
         int n = JOptionPane.showOptionDialog(this,
@@ -376,7 +374,7 @@ public class FlashMemoryGUI extends JFrame {
     private void makeNewSemester() {
         String semesterName = getStringPopup("Enter a name for your new Semester", "Create Semester", "My Semester");
         if (semesterName != null) {
-            semester = new Semester(makePrettyText(semesterName));
+            semester = new Semester(semesterName);
         }
     }
 
@@ -403,9 +401,9 @@ public class FlashMemoryGUI extends JFrame {
         }
     }
 
-    //effects: returns string entered by user with popup with specified message, title, and default value
+    //effects: returns pretty string entered by user with popup with specified message, title, and default value
     private String getStringPopup(String message, String title, String defaultValue) {
-        return (String) JOptionPane.showInputDialog(
+        String input = (String) JOptionPane.showInputDialog(
                 this,
                 message,
                 title,
@@ -413,6 +411,11 @@ public class FlashMemoryGUI extends JFrame {
                 null,
                 null,
                 defaultValue);
+        if (input == null) {
+            return null;
+        } else {
+            return makePrettyText(input);
+        }
     }
 
     //effects: removes white space and quotation marks around s
