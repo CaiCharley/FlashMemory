@@ -1,12 +1,13 @@
 package ui.gui;
 
 import exceptions.DuplicateElementException;
+import exceptions.ModifyException;
+import exceptions.NoElementException;
 import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -25,7 +26,7 @@ public class FlashMemoryGUI extends JFrame {
 
     private Semester semester;
     private StudyMaterial pointer;
-    private DefaultMutableTreeNode currentNode;
+    private StudyMaterialNode currentNode;
     private DefaultTreeModel semesterModel;
 
     // JFrame Fields
@@ -78,12 +79,8 @@ public class FlashMemoryGUI extends JFrame {
     private void setupJTree() {
         changeJTree();
         semesterTree.addTreeSelectionListener(e -> {
-            currentNode = (DefaultMutableTreeNode) semesterTree.getLastSelectedPathComponent();
-            if (currentNode != null) {
-                pointer = (StudyMaterial) currentNode.getUserObject();
-            } else {
-                pointer = null;
-            }
+            currentNode = (StudyMaterialNode) semesterTree.getLastSelectedPathComponent();
+
             refreshPointer();
         });
     }
@@ -91,7 +88,7 @@ public class FlashMemoryGUI extends JFrame {
     //modifies: this
     //effects: updates the model of semesterTree to reflect a new loaded hierarchy in semester.
     private void changeJTree() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(semester);
+        StudyMaterialNode root = new StudyMaterialNode(semester);
         addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
         semesterModel = new DefaultTreeModel(root);
         semesterTree.setModel(semesterModel);
@@ -100,9 +97,9 @@ public class FlashMemoryGUI extends JFrame {
     //modifies: node
     //effects: adds studyMaterials in materials as child nodes of node.
     // calls recursively to add items within each material if material is a StudyCollection
-    private void addStudyMaterialsToTreeNode(List<?> materials, DefaultMutableTreeNode node) {
+    private void addStudyMaterialsToTreeNode(List<?> materials, StudyMaterialNode node) {
         for (Object sm : materials) {
-            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(sm);
+            StudyMaterialNode newNode = new StudyMaterialNode(sm);
             if (sm instanceof StudyCollection<?>) {
                 StudyCollection<?> sc = (StudyCollection<?>) sm;
                 addStudyMaterialsToTreeNode(sc.getSortedByPriority(), newNode);
@@ -114,6 +111,12 @@ public class FlashMemoryGUI extends JFrame {
     //modifies: this
     //effects: updates fields in this to match new pointer
     private void refreshPointer() {
+        if (currentNode != null) {
+            pointer = (StudyMaterial) currentNode.getUserObject();
+        } else {
+            pointer = null;
+        }
+
         if (pointer != null) {
             pointerLabel.setText(pointer.getName());
         } else {
@@ -126,28 +129,25 @@ public class FlashMemoryGUI extends JFrame {
     //effects: enables/disables buttons depending on pointer
     private void toggleEditButtonEnable() {
         if (pointer instanceof Card) {
-            addButton.setEnabled(false);
-            editNameButton.setText("Edit Question");
+            setButtonsEnable(false, true, true, true, "Edit Question");
         } else if (pointer instanceof Semester) {
-            addButton.setEnabled(true);
-            removeButton.setEnabled(false);
-            editNameButton.setEnabled(true);
-            studyButton.setEnabled(true);
-            editNameButton.setText("Edit Name");
+            setButtonsEnable(true, false, true, true, "Edit Name");
         } else if (pointer != null) {
-            addButton.setEnabled(true);
-            removeButton.setEnabled(true);
-            editNameButton.setEnabled(true);
-            studyButton.setEnabled(true);
-            editNameButton.setText("Edit Name");
+            setButtonsEnable(true, true, true, true, "Edit Name");
         } else {
-            addButton.setEnabled(false);
-            removeButton.setEnabled(false);
-            editNameButton.setEnabled(false);
-            studyButton.setEnabled(false);
+            setButtonsEnable(false, false, false, false, "Edit Name");
         }
     }
 
+    //modifies: this
+    //effects: sets buttons to modify semester
+    private void setButtonsEnable(boolean add, boolean remove, boolean edit, boolean study, String editLabel) {
+        addButton.setEnabled(add);
+        removeButton.setEnabled(remove);
+        editNameButton.setEnabled(edit);
+        studyButton.setEnabled(study);
+        editNameButton.setText(editLabel);
+    }
 
     //modifies: this
     //effects: initializes buttons in JFrame with actionListeners and other parameters
@@ -161,7 +161,14 @@ public class FlashMemoryGUI extends JFrame {
         studyButton.addActionListener(e -> studyStudyMaterial());
     }
 
+    //modifies: this
+    //effects: adds studymaterial to pointer with name defined by user
+    // Throws InvalidPointerException if method invoked while pointer is Card
     private void addStudyMaterial() {
+        if (pointer instanceof Card) {
+            throw new InvalidPointerException("You cannot add items to a Card");
+        }
+
         StudyCollection<?> sc = (StudyCollection<?>) pointer;
         String subMaterial = sc.subtype.getSimpleName();
         String message = "Enter a name for your new " + subMaterial;
@@ -173,25 +180,92 @@ public class FlashMemoryGUI extends JFrame {
         if (name != null) {
             try {
                 StudyMaterial newMaterial = sc.add(makePrettyText(name));
-                DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newMaterial);
-                currentNode.insert(newNode, 0);
-                semesterModel.reload();
+                StudyMaterialNode newNode = new StudyMaterialNode(newMaterial);
+                currentNode.add(newNode);
+                semesterModel.reload(currentNode);
             } catch (DuplicateElementException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
         }
     }
 
-
+    //modifies: this
+    //effects: removes pointer from parent study collection
+    // Throws InvalidPointerException if invoked while pointer is Semester
     private void removeStudyMaterial() {
+        if (pointer instanceof Semester) {
+            throw new InvalidPointerException("Cannot remove the root semester");
+        }
+        if (confirmRemove()) {
+            try {
+                StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();
+                StudyCollection<?> parentSC = (StudyCollection<?>) parent.getUserObject();
+                parentSC.remove(pointer.getName());
+                semesterModel.removeNodeFromParent(currentNode);
+                refreshPointer();
+            } catch (NoElementException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }
+
+    //effects: ask the user to confirm removal of element
+    private boolean confirmRemove() {
+        int selection = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to remove " + pointer, "Confirmation",
+                JOptionPane.YES_NO_OPTION);
+        if (selection == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void studyStudyMaterial() {
+        String[] options = {"None", "Low", "Medium", "High", "Cancel"};
+        int n = JOptionPane.showOptionDialog(this,
+                "How confident are you with " + pointer,
+                "Save Changes",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
 
+
+        if (n != 5) {
+            pointer.trackStudy(Confidence.values()[n]);
+
+            StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();
+            parent.sort();
+            semesterModel.reload(parent);
+            refreshPointer();
+        }
     }
 
+    //modifies: this
+    //effects: edits the name of pointer
     private void editStudyMaterial() {
-
+        String newName = getStringPopup(
+                "Edit selected " + pointer.getClass().getSimpleName(), "Edit", pointer.getName()
+        );
+        if (newName != null) {
+            if (pointer instanceof Semester) {
+                semester.editName(newName);
+            } else {
+                StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();
+                StudyCollection<?> parentSC = (StudyCollection<?>) parent.getUserObject();
+                try {
+                    parentSC.editName(pointer.getName(), newName);
+                } catch (DuplicateElementException e) {
+                    JOptionPane.showMessageDialog(this, "That already exists in " + parentSC);
+                } catch (ModifyException e) {
+                    JOptionPane.showMessageDialog(this, "Can't find " + pointer + " in " + parentSC);
+                }
+            }
+            semesterModel.nodeChanged(currentNode);
+            refreshPointer();
+        }
     }
 
     //modifies: this

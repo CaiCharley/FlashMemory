@@ -24,6 +24,12 @@ public class Semester extends StudyCollection<Course> {
         return course;
     }
 
+    //modifies: this
+    //effects: modifies the name of this Semester
+    public void editName(String newName) {
+        this.setName(newName);
+    }
+
     @Override
     //effects: returns total number of cards in this
     public int countCards() {

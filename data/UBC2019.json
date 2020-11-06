@@ -7,49 +7,54 @@
     "confidence": "NONE",
     "name": "UBC2019",
     "materialMap": [{
-        "studyDates": [{
-            "month": 10,
-            "year": 2020,
-            "day": 18
-        }],
-        "confidence": "NONE",
-        "name": "CPSC 121",
-        "materialMap": [
+      "studyDates": [
+        {
+          "month": 10,
+          "year": 2020,
+          "day": 18
+        }
+      ],
+      "confidence": "NONE",
+      "name": "CPSC 122",
+      "materialMap": [
+        {
+          "studyDates": [
             {
-                "studyDates": [{
-                    "month": 10,
-                    "year": 2020,
-                    "day": 18
-                }],
-                "confidence": "NONE",
-                "name": "gates",
-                "materialMap": []
+              "month": 10,
+              "year": 2020,
+              "day": 18
+            }
+          ],
+          "confidence": "NONE",
+          "name": "gates",
+          "materialMap": []
             },
             {
                 "studyDates": [
                     {
                         "month": 10,
-                        "year": 2020,
-                        "day": 18
+                      "year": 2020,
+                      "day": 18
+                    },
+                  {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                  }
+                ],
+              "confidence": "MEDIUM",
+              "name": "LOGIC",
+              "materialMap": [
+                {
+                  "studyDates": [
+                    {
+                      "month": 10,
+                      "year": 2020,
+                      "day": 18
                     },
                     {
-                        "month": 10,
-                        "year": 2020,
-                        "day": 18
-                    }
-                ],
-                "confidence": "MEDIUM",
-                "name": "logic",
-                "materialMap": [{
-                    "studyDates": [
-                        {
-                            "month": 10,
-                            "year": 2020,
-                            "day": 18
-                        },
-                        {
-                            "month": 10,
-                            "year": 2020,
+                      "month": 10,
+                      "year": 2020,
                             "day": 18
                         }
                     ],
