@@ -42,20 +42,20 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
     //modifies: this
     //effects: adds today as last date studied to end of studyDates and updates confidence
     public void trackStudy(Confidence confidence) {
-        this.studyDates.add(LocalDate.now());
+        this.studyDates.add(0, LocalDate.now());
         this.confidence = confidence;
     }
 
     //modifies: this
     //effects: adds date studied to end of studyDates and updates confidence
     public void trackStudy(LocalDate date, Confidence confidence) {
-        this.studyDates.add(date);
+        this.studyDates.add(0, date);
         this.confidence = confidence;
     }
 
     //effects: returns number of times this has been studied (excluding creation date)
     public int getTimesStudied() {
-        return studyDates.size() - 1;
+        return studyDates.size();
     }
 
     //effects: returns days since the last time studied to the current date
@@ -63,10 +63,14 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
         return ((int) DAYS.between(getLastStudyDate(), LocalDate.now()));
     }
 
+    //effects: returns studyDates
+    public List<LocalDate> getStudyDates() {
+        return studyDates;
+    }
+
     //effects: returns last date this was studied
     public LocalDate getLastStudyDate() {
-        int lastIndex = studyDates.size() - 1;
-        return studyDates.get(lastIndex);
+        return studyDates.get(0);
     }
 
     //getters and setters

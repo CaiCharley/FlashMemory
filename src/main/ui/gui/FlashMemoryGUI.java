@@ -1,6 +1,7 @@
 package ui.gui;
 
 import exceptions.DuplicateElementException;
+import exceptions.InvalidPointerException;
 import exceptions.ModifyException;
 import exceptions.NoElementException;
 import model.*;
@@ -15,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -39,8 +41,14 @@ public class FlashMemoryGUI extends JFrame {
     private JButton studyButton;
     private JLabel semesterNameLabel;
     private JLabel pointerLabel;
-    private JTextArea textArea1;
+    private JLabel confidenceLabel;
     private JTree semesterTree;
+    private JList dateList;
+    private JLabel studyDateLabel;
+    private JButton testButton;
+    private JLabel cardCountLabel;
+    private JLabel daysSinceStudyLabel;
+    private JLabel timesStudiedLabel;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -60,6 +68,7 @@ public class FlashMemoryGUI extends JFrame {
     private void setupJFrame() {
         setupButtons();
         setupJTree();
+        refreshPointer();
 
         add(mainPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -118,11 +127,33 @@ public class FlashMemoryGUI extends JFrame {
         }
 
         if (pointer != null) {
+            if (pointer instanceof StudyCollection<?>) {
+                cardCountLabel.setText("Contained Cards: " + ((StudyCollection<?>) pointer).countCards());
+            } else {
+                cardCountLabel.setText(null);
+            }
             pointerLabel.setText(pointer.getName());
+            confidenceLabel.setText("Confidence: " + pointer.getConfidence());
+            daysSinceStudyLabel.setText(String.format("Days Since Studied: %d", pointer.getDaysSinceStudied()));
+            timesStudiedLabel.setText(String.format("Times Studied: %d", pointer.getTimesStudied()));
+            dateList.setListData(pointer.getStudyDates().toArray(new LocalDate[0]));
+            studyDateLabel.setVisible(true);
         } else {
-            pointerLabel.setText(null);
+            pointerNull();
         }
         toggleEditButtonEnable();
+    }
+
+    //modifies: this
+    //effects: clears JComponents if pointer is null
+    private void pointerNull() {
+        pointerLabel.setText(null);
+        confidenceLabel.setText(null);
+        daysSinceStudyLabel.setText(null);
+        timesStudiedLabel.setText(null);
+        cardCountLabel.setText(null);
+        studyDateLabel.setVisible(false);
+        dateList.setListData(new String[0]);
     }
 
     //modifies: this
@@ -233,7 +264,7 @@ public class FlashMemoryGUI extends JFrame {
                 options[0]);
 
 
-        if (n != 5) {
+        if (n != 4) {
             pointer.trackStudy(Confidence.values()[n]);
 
             StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();

@@ -32,21 +32,21 @@ public abstract class TestStudyMaterial {
     void testStudy() {
         sm1.trackStudy(LocalDate.now().minusWeeks(1), Confidence.LOW);
 
-        assertEquals(1, sm1.getTimesStudied());
+        assertEquals(2, sm1.getTimesStudied());
         assertEquals(LocalDate.now().minusWeeks(1), sm1.getLastStudyDate());
         assertEquals(7, sm1.getDaysSinceStudied());
         assertEquals(Confidence.LOW, sm1.getConfidence());
 
         sm1.trackStudy(LocalDate.now().minusDays(4), Confidence.MEDIUM);
 
-        assertEquals(2, sm1.getTimesStudied());
+        assertEquals(3, sm1.getTimesStudied());
         assertEquals(LocalDate.now().minusDays(4), sm1.getLastStudyDate());
         assertEquals(4, sm1.getDaysSinceStudied());
         assertEquals(Confidence.MEDIUM, sm1.getConfidence());
 
         sm1.trackStudy(Confidence.HIGH);
 
-        assertEquals(3, sm1.getTimesStudied());
+        assertEquals(4, sm1.getTimesStudied());
         assertEquals(LocalDate.now(), sm1.getLastStudyDate());
         assertEquals(0, sm1.getDaysSinceStudied());
         assertEquals(Confidence.HIGH, sm1.getConfidence());
