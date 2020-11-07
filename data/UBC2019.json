@@ -60,6 +60,18 @@
             {
               "studyDates": [
                 {
+                  "month": 11,
+                  "year": 2020,
+                  "day": 6
+                }
+              ],
+              "answer": "True",
+              "confidence": "NONE",
+              "name": "What is not false?"
+            },
+            {
+              "studyDates": [
+                {
                   "month": 10,
                   "year": 2020,
                   "day": 18
@@ -76,6 +88,6 @@
             }
           ]
         }
-        ]
+      ]
     }]
 }

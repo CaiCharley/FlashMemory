@@ -39,12 +39,14 @@ public class FlashMemoryGUI extends JFrame {
     private JPanel modifyButtonPane;
     private JPanel semesterPane;
     private JPanel pointerPane;
+    private JPanel cardPane;
 
     private JButton changeSemesterButton;
     private JButton saveSemesterButton;
     private JButton addButton;
     private JButton removeButton;
     private JButton editNameButton;
+    private JButton editAnswerButton;
     private JButton studyButton;
     private JButton testButton;
     private JLabel semesterNameLabel;
@@ -56,7 +58,6 @@ public class FlashMemoryGUI extends JFrame {
     private JLabel timesStudiedLabel;
     private JTree semesterTree;
     private JList dateList;
-    private JPanel cardPane;
     private JTextPane questionTextPane;
     private JTextPane answerTextPane;
 
@@ -100,7 +101,22 @@ public class FlashMemoryGUI extends JFrame {
         addButton.addActionListener(e -> addStudyMaterial());
         removeButton.addActionListener(e -> removeStudyMaterial());
         editNameButton.addActionListener(e -> editStudyMaterial());
+        editAnswerButton.addActionListener(e -> editAnswer());
         studyButton.addActionListener(e -> studyStudyMaterial());
+    }
+
+    private void editAnswer() {
+        if (pointer instanceof Card) {
+            Card card = ((Card) pointer);
+            String answer = getStringPopup("Enter the new answer for this card",
+                    "Change Answer",
+                    card.getAnswer());
+            card.setAnswer(answer);
+
+            currentNodeChanged();
+        } else {
+            throw new InvalidPointerException("Cannot change answer of non-card object");
+        }
     }
 
     //modifies: this
@@ -181,31 +197,34 @@ public class FlashMemoryGUI extends JFrame {
     //effects: enables/disables buttons depending on pointer
     private void toggleEditButtonEnable() {
         if (pointer instanceof Card) {
-            setButtons(false, true, true, true, "Edit Question", "Add");
+            setButtons(false, true, true, true, true,
+                    "Edit Question", "Add");
         } else if (pointer instanceof Semester) {
-            setButtons(true, false, true, true,
+            setButtons(true, false, true, true, false,
                     "Edit Name", "Add " + ((StudyCollection<?>) pointer).subtype.getSimpleName());
         } else if (pointer instanceof StudyCollection<?>) {
-            setButtons(true, true, true, true,
+            setButtons(true, true, true, true, false,
                     "Edit Name", "Add " + ((StudyCollection<?>) pointer).subtype.getSimpleName());
         } else {
-            setButtons(false, false, false, false,
+            setButtons(false, false, false, false, false,
                     "Edit Name", "Add");
         }
     }
 
     //modifies: this
     //effects: sets buttons to modify semester
-    private void setButtons(boolean add,
-                            boolean remove,
-                            boolean edit,
-                            boolean study,
+    private void setButtons(boolean addEnable,
+                            boolean removeEnable,
+                            boolean editEnable,
+                            boolean studyEnable,
+                            boolean editAnswerVisibility,
                             String editLabel,
                             String addLabel) {
-        addButton.setEnabled(add);
-        removeButton.setEnabled(remove);
-        editNameButton.setEnabled(edit);
-        studyButton.setEnabled(study);
+        addButton.setEnabled(addEnable);
+        removeButton.setEnabled(removeEnable);
+        editNameButton.setEnabled(editEnable);
+        studyButton.setEnabled(studyEnable);
+        editAnswerButton.setVisible(editAnswerVisibility);
         editNameButton.setText(editLabel);
         addButton.setText(addLabel);
     }
@@ -230,12 +249,23 @@ public class FlashMemoryGUI extends JFrame {
         }
 
         String name = getStringPopup(message, "Create " + subMaterial, "New " + subMaterial);
+        addStudyMaterialWithName(sc, name);
+    }
+
+    //modifies: this
+    //Updates semesterModel and adds new semester to current node and reloads current node. If added card, asks user for
+    // card answer
+    private void addStudyMaterialWithName(StudyCollection<?> sc, String name) {
         if (name != null) {
             try {
                 StudyMaterial newMaterial = sc.add(name);
                 StudyMaterialNode newNode = new StudyMaterialNode(newMaterial);
                 int index = sc.getSortedByPriority().indexOf(newMaterial);
                 semesterModel.insertNodeInto(newNode, currentNode, index);
+                if (newMaterial instanceof Card) {
+                    String answer = getStringPopup("Enter an answer for your new card", "Set Answer", "Answer");
+                    ((Card) newMaterial).setAnswer(answer);
+                }
             } catch (DuplicateElementException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
