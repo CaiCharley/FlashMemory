@@ -48,5 +48,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="json-20200518" level="project" />
+    <orderEntry type="library" name="jfreechart" level="project" />
+    <orderEntry type="library" name="jcommon-1.0.23" level="project" />
   </component>
 </module>

@@ -5,6 +5,11 @@ import exceptions.InvalidPointerException;
 import exceptions.ModifyException;
 import exceptions.NoElementException;
 import model.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -18,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -26,6 +32,11 @@ public class FlashMemoryGUI extends JFrame {
     // Application Fields
     private static final String JSON_DIRECTORY = "./data/";
     private static final String APP_NAME = "Flash Memory";
+    private static final Color[] COLORS = {
+            new Color(212, 90, 90),
+            new Color(213, 207, 97),
+            new Color(109, 217, 90),
+            new Color(86, 226, 207)};
 
     private Semester semester;
     private StudyMaterial pointer;
@@ -60,6 +71,7 @@ public class FlashMemoryGUI extends JFrame {
     private JList dateList;
     private JTextPane questionTextPane;
     private JTextPane answerTextPane;
+    private JPanel pieChartPane;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -175,6 +187,7 @@ public class FlashMemoryGUI extends JFrame {
             cardPane.setVisible(false);
             cardCountLabel.setText("Contained Cards: " + ((StudyCollection<?>) pointer).countCards());
             pointerLabel.setText(pointer.getName());
+            updatePieChart();
         } else if (pointer instanceof Card) {
             cardCountLabel.setVisible(false);
             setCardPane((Card) pointer);
@@ -185,10 +198,61 @@ public class FlashMemoryGUI extends JFrame {
         daysSinceStudyLabel.setText(String.format("Days Since Studied: %d", pointer.getDaysSinceStudied()));
         timesStudiedLabel.setText(String.format("Times Studied: %d", pointer.getTimesStudied()));
         dateList.setListData(pointer.getStudyDates().toArray(new LocalDate[0]));
+
+    }
+
+    private void updatePieChart() {
+        if (pointer instanceof StudyCollection<?>) {
+            StudyCollection<?> sc = (StudyCollection<?>) pointer;
+            Collection<StudyMaterial> materials = (Collection<StudyMaterial>) sc.getAll().values();
+            if (!materials.isEmpty()) {
+                DefaultPieDataset pieDataset = getConfidenceDataset(materials);
+                JFreeChart chart = ChartFactory.createPieChart("Confidence Pie Chart", pieDataset, true, false, false);
+                PiePlot plot = (PiePlot) chart.getPlot();
+
+                for (int i = 0; i < pieDataset.getItemCount(); i++) {
+                    plot.setSectionPaint(i, COLORS[i]);
+                }
+
+                pieChartPane.removeAll();
+                pieChartPane.add(new ChartPanel(chart));
+                pieChartPane.validate();
+                pieChartPane.setVisible(true);
+            } else {
+                pieChartPane.setVisible(false);
+            }
+        }
+    }
+
+    private DefaultPieDataset getConfidenceDataset(Collection<StudyMaterial> materials) {
+        int none = 0;
+        int low = 0;
+        int med = 0;
+        int high = 0;
+
+        for (StudyMaterial sm : materials) {
+            if (sm.getConfidence().ordinal() == 0) {
+                none++;
+            } else if (sm.getConfidence().ordinal() == 1) {
+                low++;
+            } else if (sm.getConfidence().ordinal() == 2) {
+                med++;
+            } else if (sm.getConfidence().ordinal() == 3) {
+                high++;
+            }
+        }
+
+        DefaultPieDataset pieDataset = new DefaultPieDataset();
+        pieDataset.setValue("None", none);
+        pieDataset.setValue("Low", low);
+        pieDataset.setValue("Medium", med);
+        pieDataset.setValue("High", high);
+        return pieDataset;
     }
 
     private void setCardPane(Card card) {
         cardPane.setVisible(true);
+        pieChartPane.setVisible(false);
         questionTextPane.setText(card.getQuestion());
         answerTextPane.setText(card.getAnswer());
     }
@@ -266,6 +330,7 @@ public class FlashMemoryGUI extends JFrame {
                     String answer = getStringPopup("Enter an answer for your new card", "Set Answer", "Answer");
                     ((Card) newMaterial).setAnswer(answer);
                 }
+                currentNodeChanged();
             } catch (DuplicateElementException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
