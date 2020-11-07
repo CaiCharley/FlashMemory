@@ -15,7 +15,6 @@ import persistence.JsonWriter;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -23,7 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -114,7 +113,31 @@ public class FlashMemoryGUI extends JFrame {
         removeButton.addActionListener(e -> removeStudyMaterial());
         editNameButton.addActionListener(e -> editStudyMaterial());
         editAnswerButton.addActionListener(e -> editAnswer());
-        studyButton.addActionListener(e -> studyStudyMaterial());
+        studyButton.addActionListener(e -> studyStudyMaterial(currentNode));
+
+        testButton.addActionListener(e -> testStudyMaterial(currentNode));
+    }
+
+    private void testStudyMaterial(StudyMaterialNode testThisNode) {
+        StudyMaterial sm = (StudyMaterial) testThisNode.getUserObject();
+
+        if (sm instanceof StudyCollection<?>) {
+            StudyCollection<?> sc = (StudyCollection<?>) sm;
+            List<StudyMaterialNode> subMaterialNodes = Collections.list(testThisNode.children());
+            Collections.shuffle(subMaterialNodes);
+            for (StudyMaterialNode sub : subMaterialNodes) {
+                testStudyMaterial(sub);
+            }
+        } else if (sm instanceof Card) {
+            StudyMaterialNode parent = (StudyMaterialNode) testThisNode.getParent();
+            promptCard((Card) sm, parent.getUserObject().toString());
+        }
+        studyStudyMaterial(testThisNode);
+    }
+
+    private void promptCard(Card card, String title) {
+        JOptionPane.showMessageDialog(this, card.getQuestion(), title, JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(this, card.getAnswer(), title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void editAnswer() {
@@ -202,53 +225,40 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     private void updatePieChart() {
-        if (pointer instanceof StudyCollection<?>) {
-            StudyCollection<?> sc = (StudyCollection<?>) pointer;
-            Collection<StudyMaterial> materials = (Collection<StudyMaterial>) sc.getAll().values();
-            if (!materials.isEmpty()) {
-                DefaultPieDataset pieDataset = getConfidenceDataset(materials);
-                JFreeChart chart = ChartFactory.createPieChart("Confidence Pie Chart", pieDataset, true, false, false);
-                PiePlot plot = (PiePlot) chart.getPlot();
+        if (!currentNode.isLeaf()) {
+            DefaultPieDataset pieDataset = getConfidenceDataset((StudyCollection<?>) pointer);
+            JFreeChart chart = ChartFactory.createPieChart("Confidence Pie Chart", pieDataset, true, false, false);
+            PiePlot plot = (PiePlot) chart.getPlot();
 
-                Font font = pointerLabel.getFont();
-                chart.getTitle().setFont(font);
-                for (int i = 0; i < pieDataset.getItemCount(); i++) {
-                    plot.setSectionPaint(i, COLORS[i]);
-                }
-
-                pieChartPane.removeAll();
-                pieChartPane.add(new ChartPanel(chart));
-                pieChartPane.validate();
-                pieChartPane.setVisible(true);
-            } else {
-                pieChartPane.setVisible(false);
+            Font font = pointerLabel.getFont();
+            chart.getTitle().setFont(font);
+            for (int i = 0; i < pieDataset.getItemCount(); i++) {
+                plot.setSectionPaint(i, COLORS[i]);
             }
+
+            pieChartPane.removeAll();
+            pieChartPane.add(new ChartPanel(chart));
+            pieChartPane.validate();
+            pieChartPane.setVisible(true);
+        } else {
+            pieChartPane.setVisible(false);
         }
     }
 
-    private DefaultPieDataset getConfidenceDataset(Collection<StudyMaterial> materials) {
-        int none = 0;
-        int low = 0;
-        int med = 0;
-        int high = 0;
+    private DefaultPieDataset getConfidenceDataset(StudyCollection<?> sc) {
+        int[] tally = {0, 0, 0, 0};
 
-        for (StudyMaterial sm : materials) {
-            if (sm.getConfidence().ordinal() == 0) {
-                none++;
-            } else if (sm.getConfidence().ordinal() == 1) {
-                low++;
-            } else if (sm.getConfidence().ordinal() == 2) {
-                med++;
-            } else if (sm.getConfidence().ordinal() == 3) {
-                high++;
-            }
+        for (StudyMaterial sm : sc.getAllCards()) {
+            int confidence = sm.getConfidence().ordinal();
+            tally[confidence]++;
         }
 
         DefaultPieDataset pieDataset = new DefaultPieDataset();
-        pieDataset.setValue("None", none);
-        pieDataset.setValue("Low", low);
-        pieDataset.setValue("Medium", med);
-        pieDataset.setValue("High", high);
+        pieDataset.setValue("None", tally[0]);
+        pieDataset.setValue("Low", tally[1]);
+        pieDataset.setValue("Medium", tally[2]);
+        pieDataset.setValue("High", tally[3]);
+
         return pieDataset;
     }
 
@@ -370,29 +380,22 @@ public class FlashMemoryGUI extends JFrame {
 
     //modifies: this
     //effects: asks user for confidence and records studying for pointer
-    private void studyStudyMaterial() {
+    private void studyStudyMaterial(StudyMaterialNode studyNode) {
+        StudyMaterial sm = (StudyMaterial) studyNode.getUserObject();
+
         String[] options = {"None", "Low", "Medium", "High", "Cancel"};
-        int n = JOptionPane.showOptionDialog(this, "How confident are you with " + pointer, "Save Changes",
+        int n = JOptionPane.showOptionDialog(this, "How confident are you with " + sm, "Save Changes",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (n != 4) {
-            if (currentNode.isRoot()) {
-                pointer.trackStudy(Confidence.values()[n]);
-                semesterModel.nodeChanged(currentNode);
+            if (studyNode.isRoot()) {
+                sm.trackStudy(Confidence.values()[n]);
+                semesterModel.nodeChanged(studyNode);
             } else {
-                pointer.trackStudy(Confidence.values()[n]);
-                StudyMaterialNode studiedNode = new StudyMaterialNode(pointer);
-
-                StudyMaterialNode parentNode = (StudyMaterialNode) currentNode.getParent();
-                StudyCollection<?> parentSC = (StudyCollection<?>) parentNode.getUserObject();
-                int index = parentSC.getSortedByPriority().indexOf(pointer);
-
-                semesterModel.removeNodeFromParent(currentNode);
-                semesterModel.insertNodeInto(studiedNode, parentNode, index);
-                currentNode = studiedNode;
-
-                TreePath path = new TreePath(currentNode.getPath());
-                semesterTree.setSelectionPath(path);
+                sm.trackStudy(Confidence.values()[n]);
+                StudyMaterialNode parentNode = (StudyMaterialNode) studyNode.getParent();
+                parentNode.sort();
+                semesterModel.reload(parentNode);
             }
             currentNodeChanged();
         }
