@@ -210,6 +210,8 @@ public class FlashMemoryGUI extends JFrame {
                 JFreeChart chart = ChartFactory.createPieChart("Confidence Pie Chart", pieDataset, true, false, false);
                 PiePlot plot = (PiePlot) chart.getPlot();
 
+                Font font = pointerLabel.getFont();
+                chart.getTitle().setFont(font);
                 for (int i = 0; i < pieDataset.getItemCount(); i++) {
                     plot.setSectionPaint(i, COLORS[i]);
                 }
