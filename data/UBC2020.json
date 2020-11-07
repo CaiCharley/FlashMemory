@@ -12,12 +12,37 @@
           {
             "month": 11,
             "year": 2020,
-            "day": 5
+            "day": 6
           }
         ],
         "confidence": "NONE",
-        "name": "New Course",
-        "materialMap": []
+        "name": "MICB 306",
+        "materialMap": [
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Coronaviridae",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Flaviviridae",
+            "materialMap": []
+          }
+        ]
       },
       {
         "studyDates": [
@@ -30,43 +55,120 @@
             "month": 10,
             "year": 2020,
             "day": 18
-                },
-                {
-                    "month": 10,
-                    "year": 2020,
-                    "day": 18
-                }
+          },
+          {
+            "month": 10,
+            "year": 2020,
+            "day": 18
+          }
+        ],
+        "confidence": "HIGH",
+        "name": "MICB 302",
+        "materialMap": [
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
             ],
-            "confidence": "HIGH",
-            "name": "MICB 302",
-            "materialMap": [{
-                "studyDates": [{
+            "confidence": "NONE",
+            "name": "Innate Immune Response",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 10,
+                "year": 2020,
+                "day": 18
+              }
+            ],
+            "confidence": "NONE",
+            "name": "TCRs",
+            "materialMap": [
+              {
+                "studyDates": [
+                  {
                     "month": 10,
                     "year": 2020,
                     "day": 18
-                }],
-                "confidence": "NONE",
-                "name": "TCRs",
-                "materialMap": [{
-                    "studyDates": [
-                        {
-                            "month": 10,
-                            "year": 2020,
-                            "day": 18
-                        },
-                      {
-                        "month": 10,
-                        "year": 2020,
-                        "day": 18
-                      }
-                    ],
-                  "answer": "2",
-                  "confidence": "HIGH",
-                  "name": "How many chains?"
-                }
-                ]
-            }
+                  },
+                  {
+                    "month": 10,
+                    "year": 2020,
+                    "day": 18
+                  }
+                ],
+                "answer": "2",
+                "confidence": "HIGH",
+                "name": "How many chains?"
+              }
             ]
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Adaptive Immune Reponse",
+            "materialMap": []
+          }
+        ]
+      },
+      {
+        "studyDates": [
+          {
+            "month": 11,
+            "year": 2020,
+            "day": 6
+          }
+        ],
+        "confidence": "NONE",
+        "name": "MICB 201",
+        "materialMap": [
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Eukaryotes",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Prokaryotes",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Bacterial Growth",
+            "materialMap": []
+          }
+        ]
       },
       {
         "studyDates": [
@@ -84,51 +186,63 @@
               {
                 "month": 11,
                 "year": 2020,
-                "day": 4
+                "day": 6
               }
             ],
             "confidence": "NONE",
-            "name": "phase3",
+            "name": "Design",
             "materialMap": [
               {
                 "studyDates": [
                   {
                     "month": 11,
                     "year": 2020,
-                    "day": 4
+                    "day": 6
                   }
                 ],
-                "answer": "a1",
+                "answer": "",
                 "confidence": "NONE",
-                "name": "q1"
+                "name": "d1"
               }
             ]
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Construction",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Basics",
+            "materialMap": []
+          },
+          {
+            "studyDates": [
+              {
+                "month": 11,
+                "year": 2020,
+                "day": 6
+              }
+            ],
+            "confidence": "NONE",
+            "name": "Abstraction",
+            "materialMap": []
           }
         ]
-      },
-      {
-        "studyDates": [
-          {
-            "month": 11,
-            "year": 2020,
-            "day": 4
-          }
-        ],
-        "confidence": "NONE",
-        "name": "c1",
-        "materialMap": []
-      },
-      {
-        "studyDates": [
-          {
-            "month": 11,
-            "year": 2020,
-            "day": 4
-          }
-        ],
-        "confidence": "NONE",
-        "name": "c2",
-        "materialMap": []
       }
     ]
 }

@@ -10,6 +10,7 @@ import persistence.JsonWriter;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,7 +36,6 @@ public class FlashMemoryGUI extends JFrame {
     private JPanel mainPanel;
     private JScrollPane studyDatePane;
     private JScrollPane semesterTreePane;
-    private JPanel pointerTextPane;
     private JPanel modifyButtonPane;
     private JPanel semesterPane;
     private JPanel pointerPane;
@@ -56,6 +56,9 @@ public class FlashMemoryGUI extends JFrame {
     private JLabel timesStudiedLabel;
     private JTree semesterTree;
     private JList dateList;
+    private JPanel cardPane;
+    private JTextPane questionTextPane;
+    private JTextPane answerTextPane;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
     // Quits if user doesn't load a semester
@@ -153,16 +156,25 @@ public class FlashMemoryGUI extends JFrame {
         // provides the contained cards field if pointer is a study collection
         if (pointer instanceof StudyCollection<?>) {
             cardCountLabel.setVisible(true);
+            cardPane.setVisible(false);
             cardCountLabel.setText("Contained Cards: " + ((StudyCollection<?>) pointer).countCards());
-        } else {
+            pointerLabel.setText(pointer.getName());
+        } else if (pointer instanceof Card) {
             cardCountLabel.setVisible(false);
+            setCardPane((Card) pointer);
+            pointerLabel.setText("Card");
         }
 
-        pointerLabel.setText(pointer.getName());
         confidenceLabel.setText("Confidence: " + pointer.getConfidence());
         daysSinceStudyLabel.setText(String.format("Days Since Studied: %d", pointer.getDaysSinceStudied()));
         timesStudiedLabel.setText(String.format("Times Studied: %d", pointer.getTimesStudied()));
         dateList.setListData(pointer.getStudyDates().toArray(new LocalDate[0]));
+    }
+
+    private void setCardPane(Card card) {
+        cardPane.setVisible(true);
+        questionTextPane.setText(card.getQuestion());
+        answerTextPane.setText(card.getAnswer());
     }
 
     //modifies: this
@@ -199,14 +211,18 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: adds studymaterial to pointer with name defined by user
-    // Throws InvalidPointerException if method invoked while pointer is Card
+    //effects: adds studymaterial to pointer with name defined by user. Updates semesterModel and adds new semester
+    // to current node and reloads current node
+    // Throws InvalidPointerException if method invoked while pointer is not studycollection.
     private void addStudyMaterial() {
-        if (pointer instanceof Card) {
-            throw new InvalidPointerException("You cannot add items to a Card");
+        StudyCollection<?> sc;
+
+        if (pointer instanceof StudyCollection<?>) {
+            sc = (StudyCollection<?>) pointer;
+        } else {
+            throw new InvalidPointerException("Pointer must be a StudyCollection");
         }
 
-        StudyCollection<?> sc = (StudyCollection<?>) pointer;
         String subMaterial = sc.subtype.getSimpleName();
         String message = "Enter a name for your new " + subMaterial;
         if (sc instanceof Topic) {
@@ -218,8 +234,8 @@ public class FlashMemoryGUI extends JFrame {
             try {
                 StudyMaterial newMaterial = sc.add(name);
                 StudyMaterialNode newNode = new StudyMaterialNode(newMaterial);
-                currentNode.add(newNode);
-                semesterModel.reload(currentNode);
+                int index = sc.getSortedByPriority().indexOf(newMaterial);
+                semesterModel.insertNodeInto(newNode, currentNode, index);
             } catch (DuplicateElementException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
@@ -227,7 +243,8 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: removes pointer from parent study collection
+    //effects: asks user to confirm, and then removes pointer from parent study collection.
+    // removes node from semestermodel and invokes currentNodeChanged
     // Throws InvalidPointerException if invoked while pointer is Semester
     private void removeStudyMaterial() {
         if (pointer instanceof Semester) {
@@ -258,22 +275,28 @@ public class FlashMemoryGUI extends JFrame {
     //effects: asks user for confidence and records studying for pointer
     private void studyStudyMaterial() {
         String[] options = {"None", "Low", "Medium", "High", "Cancel"};
-        int n = JOptionPane.showOptionDialog(this,
-                "How confident are you with " + pointer,
-                "Save Changes",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-
+        int n = JOptionPane.showOptionDialog(this, "How confident are you with " + pointer, "Save Changes",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (n != 4) {
-            pointer.trackStudy(Confidence.values()[n]);
+            if (currentNode.isRoot()) {
+                pointer.trackStudy(Confidence.values()[n]);
+                semesterModel.nodeChanged(currentNode);
+            } else {
+                pointer.trackStudy(Confidence.values()[n]);
+                StudyMaterialNode studiedNode = new StudyMaterialNode(pointer);
 
-            StudyMaterialNode parent = (StudyMaterialNode) currentNode.getParent();
-            parent.sort();
-            semesterModel.reload(parent);
+                StudyMaterialNode parentNode = (StudyMaterialNode) currentNode.getParent();
+                StudyCollection<?> parentSC = (StudyCollection<?>) parentNode.getUserObject();
+                int index = parentSC.getSortedByPriority().indexOf(pointer);
+
+                semesterModel.removeNodeFromParent(currentNode);
+                semesterModel.insertNodeInto(studiedNode, parentNode, index);
+                currentNode = studiedNode;
+
+                TreePath path = new TreePath(currentNode.getPath());
+                semesterTree.setSelectionPath(path);
+            }
             currentNodeChanged();
         }
     }
