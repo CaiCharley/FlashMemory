@@ -182,8 +182,7 @@ public abstract class StudyCollection<M extends StudyMaterial> extends StudyMate
             return false;
         }
         StudyCollection<?> that = (StudyCollection<?>) o;
-        return materialMap.equals(that.materialMap)
-                && subtype.equals(that.subtype);
+        return materialMap.equals(that.materialMap);
     }
 
     @Override
