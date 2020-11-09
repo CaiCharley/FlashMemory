@@ -71,8 +71,6 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         assertThrows(DuplicateElementException.class, () -> sc1.add(highPrioritySM.getName()));
         assertThrows(DuplicateElementException.class, () -> sc1.add(lowPrioritySM));
         assertThrows(DuplicateElementException.class, () -> sc1.add(lowPrioritySM.getName()));
-
-
     }
 
     @Test
@@ -112,6 +110,32 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
         assertFalse(sc1.contains("high edit"));
         assertEquals(size1 + 1, sc1.size());
 
+    }
+
+    @Test
+    void testEditNameExceptions() {
+        assertDoesNotThrow(() -> {
+            sc1.add(highPrioritySM);
+            sc1.add(lowPrioritySM);
+        });
+
+        // try to set highSM name to lowSM
+        assertThrows(DuplicateElementException.class,
+                () -> sc1.editName(highPrioritySM.getName(), lowPrioritySM.getName()));
+
+        // try to set name for something that doesn't exist
+        assertThrows(NoElementException.class, () -> sc1.editName("qwerty", "edited"));
+    }
+
+    @Test
+    void testAddAllException() {
+        List<M> studyMaterials = new ArrayList<>();
+        studyMaterials.add(highPrioritySM);
+        studyMaterials.add(highPrioritySM);
+
+        int size = sc1.size();
+        assertDoesNotThrow(() -> sc1.addAll(studyMaterials));
+        assertEquals(size + 1, sc1.size());
     }
 
     @Test
@@ -214,8 +238,15 @@ public abstract class TestStudyCollection<M extends StudyMaterial> {
     }
 
     @Test
-    void testEquals() {
-        //TODO: test equals and hashcode
+    abstract void testEquals();
+
+    protected void testEqualsClone(StudyCollection<?> sc1clone) {
+        assertTrue(sc1.equals(sc1));
+        assertTrue(sc1.equals(sc1clone));
+        assertFalse(sc1.equals(null));
+        assertFalse(sc1.equals(new Card("q", "a")));
+
+        assertTrue(sc1.hashCode() == sc1clone.hashCode());
     }
 }
 

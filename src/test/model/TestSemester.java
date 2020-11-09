@@ -61,6 +61,15 @@ public class TestSemester extends TestStudyCollection<Course> {
     }
 
     @Test
+    void testEditSemesterName() {
+        s1.editName("2020W1 Edit");
+        s2.editName("2019W2 Edit");
+
+        assertEquals("2020W1 Edit", s1.getName());
+        assertEquals("2019W2 Edit", s2.getName());
+    }
+
+    @Test
     void testConstructor() {
         assertEquals("2020W1", s1.getName());
         assertEquals("2019W2", s2.getName());
@@ -106,5 +115,14 @@ public class TestSemester extends TestStudyCollection<Course> {
             }
         }
         assertTrue(cards2.containsAll(s2.getAllCards()));
+    }
+
+    @Override
+    @Test
+    void testEquals() {
+        Semester clone = new Semester(sc1.getName());
+        clone.addAll(sc1.getAll().values());
+
+        testEqualsClone(clone);
     }
 }

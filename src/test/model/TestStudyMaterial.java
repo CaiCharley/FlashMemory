@@ -3,6 +3,7 @@ package model;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,7 +54,15 @@ public abstract class TestStudyMaterial {
     }
 
     @Test
-    void testEquals() {
-        //TODO: test equals and hashcode
+    void testGetDates() {
+        StudyMaterial sm = new Topic("material");
+
+        List<LocalDate> dates = sm.getStudyDates();
+        assertEquals(1, dates.size());
+        assertTrue(dates.contains(LocalDate.now()));
+
+        sm.trackStudy(LocalDate.of(2020, 1, 1), Confidence.LOW);
+        assertEquals(2, dates.size());
+        assertTrue(dates.contains(LocalDate.of(2020, 1, 1)));
     }
 }

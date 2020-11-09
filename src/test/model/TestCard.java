@@ -36,4 +36,18 @@ public class TestCard extends TestStudyMaterial {
         assertEquals(c2.getQuestion(), c2.getName());
     }
 
+    @Test
+    void testEquals() {
+        Card c1Clone = new Card("What is the powerhouse of the cell?", "Mitochondria", Confidence.NONE);
+        Card notClone = new Card("What is the powerhouse of the cell?", "Chloroplast", Confidence.NONE);
+        assertTrue(c1.equals(c1));
+        assertTrue(c1.equals(c1Clone));
+
+        assertFalse(c1.equals(null));
+        assertFalse(c1.equals(new Topic("topic")));
+        assertFalse(c1.equals(notClone));
+
+        assertTrue(c1.hashCode() == c1Clone.hashCode());
+        assertTrue(c1.hashCode() != notClone.hashCode());
+    }
 }

@@ -107,4 +107,13 @@ public class TestTopic extends TestStudyCollection<Card> {
         Collection<Card> cards2 = map2.values();
         assertTrue(cards2.containsAll(t2.getAllCards()));
     }
+
+    @Test
+    @Override
+    void testEquals() {
+        Topic clone = new Topic(sc1.getName());
+        clone.addAll(sc1.getAll().values());
+
+        testEqualsClone(clone);
+    }
 }

@@ -122,4 +122,12 @@ public class TestCourse extends TestStudyCollection<Topic> {
         assertTrue(cards2.containsAll(c2.getAllCards()));
     }
 
+    @Override
+    @Test
+    void testEquals() {
+        Course clone = new Course(sc1.getName());
+        clone.addAll(sc1.getAll().values());
+
+        testEqualsClone(clone);
+    }
 }
