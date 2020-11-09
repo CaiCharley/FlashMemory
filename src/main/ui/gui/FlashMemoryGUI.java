@@ -118,11 +118,13 @@ public class FlashMemoryGUI extends JFrame {
         testButton.addActionListener(e -> testStudyMaterial(currentNode));
     }
 
+    //modifies: this
+    //effects: tests all cards under testThisNode in a random order (or test the card if node is card)
+    // then records that the user has studied them and asks for confidence
     private void testStudyMaterial(StudyMaterialNode testThisNode) {
         StudyMaterial sm = (StudyMaterial) testThisNode.getUserObject();
 
         if (sm instanceof StudyCollection<?>) {
-            StudyCollection<?> sc = (StudyCollection<?>) sm;
             List<StudyMaterialNode> subMaterialNodes = Collections.list(testThisNode.children());
             Collections.shuffle(subMaterialNodes);
             for (StudyMaterialNode sub : subMaterialNodes) {
@@ -135,11 +137,15 @@ public class FlashMemoryGUI extends JFrame {
         studyStudyMaterial(testThisNode);
     }
 
+    //effects: shows dialog boxes with card question and answer
     private void promptCard(Card card, String title) {
         JOptionPane.showMessageDialog(this, card.getQuestion(), title, JOptionPane.QUESTION_MESSAGE);
         JOptionPane.showMessageDialog(this, card.getAnswer(), title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    //modifies: this
+    //effects: if pointer is a card, ask for new answer for card and set the card's answer.
+    // Invoke current node changed to update panes
     private void editAnswer() {
         if (pointer instanceof Card) {
             Card card = ((Card) pointer);
@@ -155,7 +161,7 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: updates semesterTree and configures variables
+    //effects: updates semesterTree and configures variables to update currentNode and invoke currentNodeChanged
     private void setupJTreeListeners() {
         semesterTree.addTreeSelectionListener(e -> {
             currentNode = (StudyMaterialNode) semesterTree.getLastSelectedPathComponent();
@@ -165,6 +171,8 @@ public class FlashMemoryGUI extends JFrame {
 
     //modifies: this
     //effects: updates the model of semesterTree to reflect a new loaded hierarchy in semester.
+    // Makes new root node and adds children. sets semestertree model to new TreeModel with new root.
+    // Invokes currentNodeChanged
     private void semesterChanged() {
         StudyMaterialNode root = new StudyMaterialNode(semester);
         addStudyMaterialsToTreeNode(semester.getSortedByPriority(), root);
@@ -188,7 +196,7 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: updates fields in this to match new curNode
+    //effects: updates pointer and pointerPane in this to match new currentNode. Toggles buttons based on pointer class
     private void currentNodeChanged() {
         if (currentNode != null) {
             pointer = (StudyMaterial) currentNode.getUserObject();
@@ -202,7 +210,9 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: updates fields in pointerPane to reflect a new pointer
+    //effects: updates fields in pointerPane to reflect a new pointer.
+    // If studycollection, disable card pane, and set info on pointer pane, invoke update piechart.
+    // If pointer is card, setCardpane
     private void updatePointerPane() {
         // provides the contained cards field if pointer is a study collection
         if (pointer instanceof StudyCollection<?>) {
@@ -224,6 +234,9 @@ public class FlashMemoryGUI extends JFrame {
 
     }
 
+    //modifies: this
+    //effects: if currentNode has children make a pieplot based on confidence of contained cards.
+    // Update font and colours of chart and update pieChartpane with new chart. Otherwise disable piechartpane
     private void updatePieChart() {
         if (!currentNode.isLeaf()) {
             DefaultPieDataset pieDataset = getConfidenceDataset((StudyCollection<?>) pointer);
@@ -245,6 +258,7 @@ public class FlashMemoryGUI extends JFrame {
         }
     }
 
+    //effects: returns PieDataset based on confidence of cards in sc
     private DefaultPieDataset getConfidenceDataset(StudyCollection<?> sc) {
         int[] tally = {0, 0, 0, 0};
 
@@ -262,6 +276,8 @@ public class FlashMemoryGUI extends JFrame {
         return pieDataset;
     }
 
+    //modifies: this
+    //effects: sets up visibility and question/answer of card pane based on card parameter
     private void setCardPane(Card card) {
         cardPane.setVisible(true);
         pieChartPane.setVisible(false);
@@ -288,7 +304,7 @@ public class FlashMemoryGUI extends JFrame {
     }
 
     //modifies: this
-    //effects: sets buttons to modify semester
+    //effects: sets buttons to modify semester based on passed in parameters
     private void setButtons(boolean addEnable,
                             boolean removeEnable,
                             boolean editEnable,

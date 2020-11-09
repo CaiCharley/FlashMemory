@@ -15,16 +15,21 @@ public class StudyMaterialNode extends DefaultMutableTreeNode {
         super(userObject);
     }
 
+    //modifies: this
+    //effects: adds child to current node and sort the children
     @Override
     public void add(MutableTreeNode newChild) {
         super.add(newChild);
         sort();
     }
 
+    //modifies: this
+    //effects: sort children with comparator based on StudyMaterial
     public void sort() {
         Collections.sort(children, compare());
     }
 
+    //effects: returns comparator based on study material
     private Comparator compare() {
         return new Comparator<DefaultMutableTreeNode>() {
             @Override
