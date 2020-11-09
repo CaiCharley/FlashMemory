@@ -68,7 +68,7 @@ public class JsonReader {
 
     // MODIFIES: sc
     // EFFECTS: parses StudyMaterial from JsonObject and adds them to sc
-    private void addStudyMaterial(StudyCollection<?> sc, JSONObject jsonStudyMaterial) {
+    public void addStudyMaterial(StudyCollection<?> sc, JSONObject jsonStudyMaterial) {
         String name = jsonStudyMaterial.getString("name");
         Confidence confidence = Confidence.valueOf(jsonStudyMaterial.getString("confidence"));
         try {

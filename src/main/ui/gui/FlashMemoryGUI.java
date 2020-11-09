@@ -1,7 +1,6 @@
 package ui.gui;
 
 import exceptions.DuplicateElementException;
-import exceptions.InvalidPointerException;
 import exceptions.ModifyException;
 import exceptions.NoElementException;
 import model.*;

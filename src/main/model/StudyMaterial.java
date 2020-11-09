@@ -107,7 +107,7 @@ public abstract class StudyMaterial implements Comparable<StudyMaterial>, Writab
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);
-        json.put("confidence", confidence);
+        json.put("confidence", confidence.toString());
         json.put("studyDates", studyDatesToJson());
 
         return json;

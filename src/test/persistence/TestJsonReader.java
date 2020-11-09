@@ -94,4 +94,18 @@ class TestJsonReader {
         }
         assertTrue(cardAnswers.containsAll(parsedCardAnswers));
     }
+
+    @Test
+    void testReadDuplicateException() {
+        JsonReader reader = new JsonReader("./data/testEmptySemester.json");
+
+        Topic t = new Topic("topic");
+        Card c = new Card("q", "a");
+
+        assertDoesNotThrow(() -> t.add("q", "a"));
+
+        assertDoesNotThrow(() -> reader.addStudyMaterial(t, c.toJson()));
+
+        assertEquals(1, t.size());
+    }
 }
