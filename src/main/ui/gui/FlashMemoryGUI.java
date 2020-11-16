@@ -43,32 +43,42 @@ public class FlashMemoryGUI extends JFrame {
 
     // JFrame Fields
     private JPanel mainPanel;
-    private JScrollPane studyDatePane;
-    private JScrollPane semesterTreePane;
-    private JPanel modifyButtonPane;
-    private JPanel semesterPane;
-    private JPanel pointerPane;
-    private JPanel cardPane;
 
-    private JButton changeSemesterButton;
-    private JButton saveSemesterButton;
+    // Semester modification pane and components
+    private JPanel modifyButtonPane;
     private JButton addButton;
     private JButton removeButton;
     private JButton editNameButton;
     private JButton editAnswerButton;
     private JButton studyButton;
-    private JButton testButton;
+
+    // Semester model pane and components
+    private JPanel semesterPane;
     private JLabel semesterNameLabel;
+    private JButton changeSemesterButton;
+    private JButton saveSemesterButton;
+
+    private JScrollPane semesterTreePane;
+    private JTree semesterTree;
+
+    // Pointer pane and components
+    private JPanel pointerPane;
     private JLabel pointerLabel;
     private JLabel confidenceLabel;
     private JLabel studyDateLabel;
     private JLabel cardCountLabel;
     private JLabel daysSinceStudyLabel;
     private JLabel timesStudiedLabel;
-    private JTree semesterTree;
+    private JButton testButton;
+
+    private JScrollPane studyDatePane;
     private JList dateList;
+
+    private JPanel cardPane;
     private JTextPane questionTextPane;
     private JTextPane answerTextPane;
+
+
     private JPanel pieChartPane;
 
     //effects: makes new FlashMemoryGUI with title and initializes semester and JFrame elements.
@@ -104,7 +114,7 @@ public class FlashMemoryGUI extends JFrame {
 
     //modifies: this
     //effects: initializes buttons in JFrame with actionListeners and other parameters
-    private void setupButtonListeners() {
+    public void setupButtonListeners() {
         changeSemesterButton.addActionListener(e -> setSemester());
         saveSemesterButton.addActionListener(e -> saveSemester());
 
