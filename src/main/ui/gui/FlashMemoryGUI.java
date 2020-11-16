@@ -282,6 +282,7 @@ public class FlashMemoryGUI extends JFrame {
         pieChartPane.setVisible(false);
         questionTextPane.setText(card.getQuestion());
         answerTextPane.setText(card.getAnswer());
+        cardPane.revalidate();
     }
 
     //modifies: this

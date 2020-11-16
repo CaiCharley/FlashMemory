@@ -31,3 +31,13 @@ Phase 3
 - As a user, I want to be able to save my semester and be prompted to save before quitting
 - As a user, I want to be able to test myself on the flash cards within a study collection and update my confidence
 - As a user, I want a visual representation of how I am doing for a study collection (pie chart of confidence)
+
+Phase 4: Task 2
+- Design and test a class in your model package that is robust
+    - Methods in StudyCollection have been made robust. Specifically, methods involving adding, removing, and editing StudyMaterials throws DuplicateElementExceptions and NoElementExceptions if arguments to modify the material map are not valid
+- Design a type hierarchy in your code
+    - StudyMaterial is the superclass of all model classes implementing conserved functionality of things that can be studied
+    - Concrete StudyMaterials other than Card extend StudyCollection to have conserved functionality involving management of sub-materials
+    - Concrete StudyCollections override methods to obtain the set of Card within themselves recusively and also implement robust methods to add the correct type of StudyMaterial within their material map
+- Make appropriate use of the Map interface within your code
+    - StudyCollections have a HashMap field to store their sub materials with the names of the sub materials as the key to simplify lookup
