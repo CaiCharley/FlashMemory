@@ -41,3 +41,8 @@ Phase 4: Task 2
     - Concrete StudyCollections override methods to obtain the set of Card within themselves recusively and also implement robust methods to add the correct type of StudyMaterial within their material map
 - Make appropriate use of the Map interface within your code
     - StudyCollections have a HashMap field to store their sub materials with the names of the sub materials as the key to simplify lookup
+
+Phase 4: Task 3
+Regarding my model classes, I believe that I have the done as much refactoring as I can to maintain cohesion and reduce coupling. Duplicated code was abstracted away with the StudyMaterial and StudyCollection abstract classes to make a pseudo-composition design pattern with each level only able to add components of specified type. One improvement I could make would be to integrate my composition to extend DefaultTreeNode to allow better integration with Swing's JTree.
+
+One area I believe refactoring would be beneficial would be within the GUI class. I currently have several panels with functionality specific methods within the main JFrame such as PointerPane, SemesterPane, and ModifyButtonPane that could be delegated within their own classes to improve cohesion and instead have the main GUI class have them as fields. However, since I opted to use IntelliJ's form builder, it made it difficult to easily delegate the components to different tasks since the new panels would lose formatting reference to the form file. A workaround would be to make a separate form file for each of the panes to maintain formatting, and I would implement this if I had extra time.
