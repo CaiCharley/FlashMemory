@@ -1,4 +1,4 @@
-# Flash Memory
+# Flash Memory (UBC 210 Java Project)
 
 ### A flash card studying system that implements the Retrospective Revision Spaced Repetition Method with Active Recall
 
